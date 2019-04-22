@@ -67,6 +67,12 @@ public class Main {
 		menuHeThong.add(itemLogout);
 		
 		JMenuItem itemExit = new JMenuItem("Thoát");
+		itemExit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+		});
 		menuHeThong.add(itemExit);
 		
 		JMenu menuQuanLy = new JMenu("Quản Lý");
