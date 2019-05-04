@@ -7,10 +7,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DangNhap extends JFrame {
 
@@ -68,11 +74,27 @@ public class DangNhap extends JFrame {
 		contentPane.add(txtPW);
 		
 		JButton btnDN = new JButton("Đăng nhập");
+		btnDN.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(true) {
+					Main frmMain = new Main();
+					setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(rootPane, "Đăng nhập không thành công");
+				}
+			}
+		});
 		btnDN.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnDN.setBounds(47, 138, 136, 41);
 		contentPane.add(btnDN);
 		
 		JButton btnThoat = new JButton("Thoát");
+		btnThoat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				dispose();
+			}
+		});
 		btnThoat.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnThoat.setBounds(253, 138, 136, 41);
 		contentPane.add(btnThoat);

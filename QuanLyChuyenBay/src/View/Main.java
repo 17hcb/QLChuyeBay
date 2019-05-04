@@ -1,10 +1,9 @@
 package View;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -12,6 +11,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
+import javax.swing.JTabbedPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class Main {
 
@@ -26,6 +30,8 @@ public class Main {
 				try {
 					Main window = new Main();
 					window.frmMnHnhChnh.setVisible(true);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -44,6 +50,8 @@ public class Main {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+
+		
 		frmMnHnhChnh = new JFrame();
 		frmMnHnhChnh.setTitle("Màn hình chính");
 		frmMnHnhChnh.setBounds(100, 100, 537, 368);
@@ -53,15 +61,51 @@ public class Main {
 		JMenuBar menuBar = new JMenuBar();
 		frmMnHnhChnh.setJMenuBar(menuBar);
 		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		GroupLayout groupLayout = new GroupLayout(frmMnHnhChnh.getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 1365, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 681, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		frmMnHnhChnh.getContentPane().setLayout(groupLayout);
+		frmMnHnhChnh.setVisible(true);
+		
 		JMenu menuHeThong = new JMenu("Hệ thống");
 		menuHeThong.setIcon(new ImageIcon(Main.class.getResource("/com/sun/java/swing/plaf/windows/icons/HardDrive.gif")));
 		menuBar.add(menuHeThong);
 		
 		JMenuItem itemQLNV = new JMenuItem("Quản lý nhân viên");
+		itemQLNV.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NhanVien nv = new NhanVien();
+				tabbedPane.addTab("Nhân viên", nv.getContentPane());
+			}
+		});
 		menuHeThong.add(itemQLNV);
 		
 		JMenuItem itemDoiMK = new JMenuItem("Đổi mật khẩu");
+		itemDoiMK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		menuHeThong.add(itemDoiMK);
+		
+		JMenuItem itemQuyDinh = new JMenuItem("Quy định");
+		itemQuyDinh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				QuyDinh qd = new QuyDinh();
+				tabbedPane.addTab("Quy định", qd.getContentPane());
+			}
+		});
+		menuHeThong.add(itemQuyDinh);
 		
 		JMenuItem itemLogout = new JMenuItem("Đăng xuất");
 		menuHeThong.add(itemLogout);
@@ -80,40 +124,98 @@ public class Main {
 		menuBar.add(menuQuanLy);
 		
 		JMenuItem itemQLSanBay = new JMenuItem("Quản lý sân bay");
+		itemQLSanBay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SanBay dn = new SanBay();
+				tabbedPane.addTab("Sân bay", dn.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLSanBay);
 		
 		JMenuItem itemQLTuyenBay = new JMenuItem("Quản lý tuyến bay");
+		itemQLTuyenBay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TuyenBay tb = new TuyenBay();
+				tabbedPane.addTab("Tuyến bay", tb.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLTuyenBay);
 		
 		JMenuItem itemQLMayBay = new JMenuItem("Quản lý máy bay");
+		itemQLMayBay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MayBay mb = new MayBay();
+				tabbedPane.addTab("Máy bay", mb.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLMayBay);
 		
 		JMenuItem itemQLLichBay = new JMenuItem("Quản lý lịch bay");
+		itemQLLichBay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LichBay lb = new LichBay();
+				tabbedPane.addTab("Lịch bay", lb.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLLichBay);
 		
 		JMenuItem itemQLHangVe = new JMenuItem("Quản lý hạng vé");
+		itemQLHangVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				HangVe hv = new HangVe();
+				tabbedPane.addTab("Hạng Vé", hv.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLHangVe);
 		
 		JMenuItem itemQLGiaVe = new JMenuItem("Quản lý giá vé");
+		itemQLGiaVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Gia g = new Gia();
+				tabbedPane.addTab("Giá Vé", g.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLGiaVe);
 		
 		JMenuItem itemQLKhachHang = new JMenuItem("Quản lý khách hàng");
+		itemQLKhachHang.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				KhachHang kh = new KhachHang();
+				tabbedPane.addTab("Khách hàng", kh.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLKhachHang);
 		
 		JMenuItem itemQLDatCho = new JMenuItem("Quản lý đặt chỗ");
+		itemQLDatCho.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DatCho dc = new DatCho();
+				tabbedPane.addTab("Đặt chỗ", dc.getContentPane());
+			}
+		});
 		menuQuanLy.add(itemQLDatCho);
+		
+		JMenuItem itemVeChuyenBay = new JMenuItem("Vé chuyến bay");
+		itemVeChuyenBay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VeChuyenBay vcb = new VeChuyenBay();
+				tabbedPane.addTab("Vé chuyến bay", vcb.getContentPane());
+			}
+		});
+		menuQuanLy.add(itemVeChuyenBay);
 		
 		JMenu menuBaoCao = new JMenu("Báo cáo");
 		menuBaoCao.setIcon(new ImageIcon(Main.class.getResource("/javax/swing/plaf/metal/icons/ocean/file.gif")));
 		menuBar.add(menuBaoCao);
 		
 		JMenuItem itemDTBVThang = new JMenuItem("Doanh thu bán vé tháng");
+		itemDTBVThang.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DoanhThuThang dtt = new DoanhThuThang();
+				tabbedPane.addTab("Doanh Thu Tháng", dtt.getContentPane());
+			}
+		});
 		menuBaoCao.add(itemDTBVThang);
-//		frmMnHnhChnh.setUndecorated(true);
-		frmMnHnhChnh.setVisible(true);
-		
 	}
 
-	private static void addPopup(Component component, final JPopupMenu popup) {
-	}
 }
