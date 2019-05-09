@@ -1,29 +1,40 @@
 package JDBC;
+import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Properties;
 
 public class JDBC {
 
 	public static Connection getJDBCConnection(){
-		final String url = "jdbc:mysql://localhost:3306/quanlychuyenbay?user=root&password=123456";
+		Properties prop = new Properties();
+		String URL;
+		String USER;
+		String PASSWORD;
+		Connection con;
+		
+		
 		
 		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-			Class.forName("com.mysql.cj.jdbc.Driver");
-
-			Connection conn = DriverManager.getConnection(url);
+			prop.load(new FileReader(new File("config.properties")));
+			URL = prop.getProperty("url");
+			USER = prop.getProperty("user");
+			PASSWORD = prop.getProperty("password");
 			
-			return conn;
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			con = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			return con;
+			
+		}catch (Exception e) {
+			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 	
