@@ -12,22 +12,16 @@ public class JDBC {
 		String URL;
 		String USER;
 		String PASSWORD;
-		Connection con;
-			
-		
-		
+
 		try {
 			prop.load(new FileReader(new File("config.properties")));
 			URL = prop.getProperty("url");
 			USER = prop.getProperty("user");
 			PASSWORD = prop.getProperty("password");
 			
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			con = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
+			Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
 			
 			return con;
 			

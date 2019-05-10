@@ -1,34 +1,32 @@
 package View;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.ResultSet;
-import com.mysql.jdbc.Statement;
 
 import JDBC.JDBC;
-
-import java.awt.Panel;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JTable;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import net.proteanit.sql.DbUtils;
 
 public class KhachHang extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -106450264968318044L;
+	
 	private JPanel contentPane;
 	private JTextField txtCMND;
 	private JTextField txtTenKH;
@@ -39,47 +37,20 @@ public class KhachHang extends JFrame {
 	 * Launch the application.
 	 */
 	
-	public static ArrayList<Method.KhachHang> viewDataKH(){
-		
-		ArrayList<Method.KhachHang> kh = null;
-		kh = new ArrayList<Method.KhachHang>();
-		
-		try {
-            Connection conn= (Connection) JDBC.getJDBCConnection();
-            String qry="select * from tblKhachHang";
-            Statement st=(Statement) conn.createStatement();
-            ResultSet rs=(ResultSet) st.executeQuery(qry);
-            
-
-            
-            Method.KhachHang khachhang;
-            
-            while (rs.next()) {
-            	khachhang = new Method.KhachHang(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));               
-            	kh.add(khachhang);
-              }
-           
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-       return kh; 				
-	}
-	
-	
 	public static void LoadData() {
 		// TODO Auto-generated method stub
-		ArrayList<Method.KhachHang> kq = viewDataKH();
-		DefaultTableModel model = (DefaultTableModel) tblKhachHang.getModel();
-		model.setRowCount(0);
-		Object[] row=new Object[4];
-        for (int i = 0; i < kq.size(); i++) {
-            row[0]=kq.get(i).getIdKhachHang();
-            row[1]=kq.get(i).getTenKhachHang();
-            row[2]=kq.get(i).getCMND();
-            row[3]=kq.get(i).getSoDienThoai();
-            model.addRow(row);
-        }
-		
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          String qry="select * from tblKhachHang";
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);
+          
+          tblKhachHang.setModel(DbUtils.resultSetToTableModel(rs));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
 	}
 	
 	
@@ -102,7 +73,7 @@ public class KhachHang extends JFrame {
 	 * Create the frame.
 	 */
 	public KhachHang() {
-		setTitle("Khách hàng");
+		setTitle("KHÁCH HÀNG");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -122,11 +93,11 @@ public class KhachHang extends JFrame {
 		lblCmnd.setBounds(42, 60, 69, 14);
 		contentPane.add(lblCmnd);
 		
-		JLabel lblTnKhchHng = new JLabel("Tên khách hàng");
+		JLabel lblTnKhchHng = new JLabel("TÊN KHÁCH HÀNG");
 		lblTnKhchHng.setBounds(42, 85, 94, 14);
 		contentPane.add(lblTnKhchHng);
 		
-		JLabel lblinThoi = new JLabel("Điện thoại");
+		JLabel lblinThoi = new JLabel("SỐ ĐIỆN THOẠI");
 		lblinThoi.setBounds(42, 110, 94, 14);
 		contentPane.add(lblinThoi);
 		
@@ -145,7 +116,7 @@ public class KhachHang extends JFrame {
 		txtDT.setBounds(146, 110, 146, 20);
 		contentPane.add(txtDT);
 		
-		JButton btnAdd = new JButton("Thêm mới");
+		JButton btnAdd = new JButton("THÊM");
 		btnAdd.addActionListener(new ActionListener() {
 			/*Insert Data*/
 			public void actionPerformed(ActionEvent arg0) {
@@ -164,11 +135,11 @@ public class KhachHang extends JFrame {
 		btnAdd.setBounds(323, 56, 89, 23);
 		contentPane.add(btnAdd);
 		
-		JButton btnUpdate = new JButton("Cập nhật");
+		JButton btnUpdate = new JButton("CẬP NHẬT");
 		btnUpdate.setBounds(323, 81, 89, 23);
 		contentPane.add(btnUpdate);
 		
-		JButton btnDelete = new JButton("Xóa");
+		JButton btnDelete = new JButton("XÓA");
 		btnDelete.setBounds(323, 106, 89, 23);
 		contentPane.add(btnDelete);
 		
