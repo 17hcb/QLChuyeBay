@@ -13,7 +13,7 @@ public class JDBC {
 		String USER;
 		String PASSWORD;
 		Connection con;
-		
+			
 		
 		
 		try {
@@ -36,19 +36,5 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public static void main(String[] args)
-	{
-		Connection connection = getJDBCConnection();
-		
-		if(connection != null)
-		{
-			System.out.println("THANH CONG");
-		}
-		else
-		{
-			System.out.println("THAT BAI");
-		}
 	}
 }
