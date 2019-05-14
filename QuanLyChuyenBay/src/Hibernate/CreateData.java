@@ -15,7 +15,7 @@ public class CreateData {
 		Session session = factory.getCurrentSession();
 		try {
 			KhachHangEntity emp = new KhachHangEntity();
-			emp.setIdKhachHang(4);
+			emp.setIdKhachHang(5);
 			emp.setCmnd("093352214");
 			emp.setTenKhachHang("NguyenQuocCuong");
 			emp.setSoDienThoai("0909696238291");
