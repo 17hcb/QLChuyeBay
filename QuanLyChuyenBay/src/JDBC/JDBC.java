@@ -19,7 +19,7 @@ public class JDBC {
 			USER = prop.getProperty("user");
 			PASSWORD = prop.getProperty("password");
 			
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 
 			Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
 			
