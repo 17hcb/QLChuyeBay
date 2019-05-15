@@ -304,7 +304,6 @@ public class MayBay extends JFrame {
 		txtTimKiem.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				
 				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblMayBay.getModel());
 				tblMayBay.setRowSorter(sorter);
 				sorter.setRowFilter(RowFilter.regexFilter(txtTimKiem.getText().trim()));
