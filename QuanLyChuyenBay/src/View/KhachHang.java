@@ -18,6 +18,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,6 +29,10 @@ import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class KhachHang extends JFrame {
 
@@ -41,6 +46,7 @@ public class KhachHang extends JFrame {
 	private JTextField txtTenKH;
 	private JTextField txtDT;
 	private static JTable tblKhachHang;
+	private JTextField txtSearch;
 
 	/**
 	 * Launch the application.
@@ -100,10 +106,10 @@ public class KhachHang extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 889, 35);
+		panel.setBounds(25, 10, 412, 35);
 		contentPane.add(panel);
 		
-		JLabel lblKhchHng = new JLabel("KHÁCH HÀNG");
+		JLabel lblKhchHng = new JLabel("THÔNG TIN KHÁCH HÀNG");
 		lblKhchHng.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel.add(lblKhchHng);
 		
@@ -266,9 +272,13 @@ public class KhachHang extends JFrame {
 		contentPane.add(btnDelete);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.addMouseListener(new MouseAdapter() {
+		scrollPane.setBounds(458, 85, 436, 243);
+		contentPane.add(scrollPane);
+		
+		tblKhachHang = new JTable();
+		tblKhachHang.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
 				try {
 					 int index = tblKhachHang.getSelectedRow();
 				     DefaultTableModel dtm = (DefaultTableModel)tblKhachHang.getModel(); 
@@ -281,10 +291,6 @@ public class KhachHang extends JFrame {
 				}
 			}
 		});
-		scrollPane.setBounds(458, 85, 436, 243);
-		contentPane.add(scrollPane);
-		
-		tblKhachHang = new JTable();
 		tblKhachHang.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tblKhachHang);
 		
@@ -297,5 +303,31 @@ public class KhachHang extends JFrame {
 		});
 		btnLam.setBounds(337, 236, 100, 23);
 		contentPane.add(btnLam);
+		
+		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblKhachHang.getModel());
+				tblKhachHang.setRowSorter(sorter);
+				
+				sorter.setRowFilter(RowFilter.regexFilter(txtSearch.getText().trim()));
+			}
+		});
+		txtSearch.setColumns(10);
+		txtSearch.setBounds(554, 54, 340, 20);
+		contentPane.add(txtSearch);
+		
+		JLabel lblTimKiem = new JLabel("Tìm Kiếm");
+		lblTimKiem.setBounds(460, 54, 85, 20);
+		contentPane.add(lblTimKiem);
+		
+		Panel panel_1 = new Panel();
+		panel_1.setBounds(458, 10, 436, 35);
+		contentPane.add(panel_1);
+		
+		JLabel lblDanhSchKhch = new JLabel("DANH SÁCH KHÁCH HÀNG");
+		lblDanhSchKhch.setFont(new Font("Tahoma", Font.BOLD, 20));
+		panel_1.add(lblDanhSchKhch);
 	}
 }
