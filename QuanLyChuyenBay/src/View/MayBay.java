@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -25,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JList;
@@ -34,6 +36,8 @@ import java.awt.FlowLayout;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MayBay extends JFrame {
 
@@ -42,6 +46,7 @@ public class MayBay extends JFrame {
 	private static JTextField txtTenMB;
 	private static JTextField txtThongTin;
 	private static JTable tblMayBay;
+	private static JTextField txtTimKiem;
 
 	/**
 	 * Launch the application.
@@ -106,7 +111,7 @@ public class MayBay extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 569, 48);
+		panel.setBounds(137, 2, 328, 48);
 		contentPane.add(panel);
 		
 		JLabel lblNewLabel = new JLabel("QUẢN LÝ MÁY BAY");
@@ -183,7 +188,7 @@ public class MayBay extends JFrame {
 				}
 			}
 		});
-		btnAdd.setBounds(184, 150, 89, 23);
+		btnAdd.setBounds(184, 140, 89, 23);
 		contentPane.add(btnAdd);
 		
 		JButton btnUpdate = new JButton("Cập nhật");
@@ -229,7 +234,7 @@ public class MayBay extends JFrame {
 				}
 			}
 		});
-		btnUpdate.setBounds(305, 150, 89, 23);
+		btnUpdate.setBounds(305, 140, 89, 23);
 		contentPane.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Xóa");
@@ -270,7 +275,7 @@ public class MayBay extends JFrame {
 				}
 			}
 		});
-		btnDelete.setBounds(426, 150, 89, 23);
+		btnDelete.setBounds(426, 140, 89, 23);
 		contentPane.add(btnDelete);
 		
 		JButton btnLamMoi = new JButton("Làm mới");
@@ -281,14 +286,31 @@ public class MayBay extends JFrame {
 
 
 		});
-		btnLamMoi.setBounds(54, 150, 89, 23);
+		btnLamMoi.setBounds(54, 138, 89, 23);
 		contentPane.add(btnLamMoi);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 179, 564, 229);
+		scrollPane.setBounds(10, 224, 564, 184);
 		contentPane.add(scrollPane);
 		
 		tblMayBay = new JTable();
 		scrollPane.setViewportView(tblMayBay);
+		
+		JLabel lblTimKiem = new JLabel("Tìm kiếm");
+		lblTimKiem.setBounds(54, 182, 71, 20);
+		contentPane.add(lblTimKiem);
+		
+		txtTimKiem = new JTextField();
+		txtTimKiem.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)tblMayBay.getModel());
+				tblMayBay.setRowSorter(sorter);
+				sorter.setRowFilter(RowFilter.regexFilter(txtTimKiem.getText().trim()));
+			}
+		});
+		txtTimKiem.setColumns(10);
+		txtTimKiem.setBounds(154, 181, 361, 23);
+		contentPane.add(txtTimKiem);
 	}
 }
