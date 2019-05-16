@@ -261,6 +261,7 @@ public class Main {
 				{
 					tabbedPane.remove(0);
 				}
+				
 			}
 		});
 		menuBaoCao.add(itemDTBVThang);
