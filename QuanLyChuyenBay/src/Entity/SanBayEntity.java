@@ -20,7 +20,7 @@ public class SanBayEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="IDSanBay")
+	@Column(name="IdSanBay")
 	private int idSanBay;	
 
 	@Column(name="MaSanBay")

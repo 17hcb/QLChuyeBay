@@ -166,7 +166,7 @@ public class SanBay extends JFrame {
 				}
 			}
 		});
-		btnAdd.setBounds(318, 66, 89, 23);
+		btnAdd.setBounds(318, 66, 111, 23);
 		contentPane.add(btnAdd);
 		
 		JButton btnUpdate = new JButton("Cập nhật");
@@ -212,7 +212,7 @@ public class SanBay extends JFrame {
 				}
 			}
 		});
-		btnUpdate.setBounds(318, 110, 89, 23);
+		btnUpdate.setBounds(318, 110, 111, 23);
 		contentPane.add(btnUpdate);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -255,7 +255,7 @@ public class SanBay extends JFrame {
 				}
 			}
 		});
-		btnDelete.setBounds(318, 155, 89, 23);
+		btnDelete.setBounds(318, 155, 111, 23);
 		contentPane.add(btnDelete);
 		scrollPane.setViewportView(table);
 		
@@ -301,7 +301,7 @@ public class SanBay extends JFrame {
 				ResetField();
 			}
 		});
-		button.setBounds(318, 201, 89, 23);
+		button.setBounds(318, 201, 111, 23);
 		contentPane.add(button);
 		
 		
