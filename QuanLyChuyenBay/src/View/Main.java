@@ -87,6 +87,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				NhanVien nv = new NhanVien();
 				tabbedPane.addTab("Nhân viên", nv.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuHeThong.add(itemQLNV);
@@ -103,6 +107,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				QuyDinh qd = new QuyDinh();
 				tabbedPane.addTab("Quy định", qd.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuHeThong.add(itemQuyDinh);
@@ -128,6 +136,10 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {
 				SanBay dn = new SanBay();
 				tabbedPane.addTab("Sân bay", dn.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLSanBay);
@@ -137,6 +149,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				TuyenBay tb = new TuyenBay();
 				tabbedPane.addTab("Tuyến bay", tb.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLTuyenBay);
@@ -146,6 +162,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				MayBay mb = new MayBay();
 				tabbedPane.addTab("Máy bay", mb.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLMayBay);
@@ -155,6 +175,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				LichBay lb = new LichBay();
 				tabbedPane.addTab("Lịch bay", lb.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLLichBay);
@@ -164,6 +188,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				HangVe hv = new HangVe();
 				tabbedPane.addTab("Hạng Vé", hv.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLHangVe);
@@ -173,6 +201,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				Gia g = new Gia();
 				tabbedPane.addTab("Giá Vé", g.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLGiaVe);
@@ -182,6 +214,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				KhachHang kh = new KhachHang();
 				tabbedPane.addTab("Khách hàng", kh.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLKhachHang);
@@ -191,6 +227,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				DatCho dc = new DatCho();
 				tabbedPane.addTab("Đặt chỗ", dc.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemQLDatCho);
@@ -200,6 +240,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				VeChuyenBay vcb = new VeChuyenBay();
 				tabbedPane.addTab("Vé chuyến bay", vcb.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuQuanLy.add(itemVeChuyenBay);
@@ -213,6 +257,10 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				DoanhThuThang dtt = new DoanhThuThang();
 				tabbedPane.addTab("Doanh Thu Tháng", dtt.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
 			}
 		});
 		menuBaoCao.add(itemDTBVThang);
