@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tblgiave")
+@Table(name = "giave")
 public class GiaVeEntity implements Serializable {
 	/**
 	 * 
@@ -19,18 +19,18 @@ public class GiaVeEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="IdGiaVe")
-	private int idGiaVe;	
+	@Column(name="id_chuyenbay")
+	private int idChuyenBay;	
 
-	@Column(name="HangVe")
+	@Column(name="hangve")
 	private int hangVe;
 
-	@Column(name="GiaTien")
+	@Column(name="giatien")
 	private int giaTien;	  
 
-	public GiaVeEntity(int idGiaVe, int hangVe, int giaTien) {
+	public GiaVeEntity(int idChuyenBay, int hangVe, int giaTien) {
 		super();
-		this.idGiaVe = idGiaVe;
+		this.idChuyenBay = idChuyenBay;
 		this.hangVe = hangVe;
 		this.giaTien = giaTien;
 	}
@@ -40,12 +40,12 @@ public class GiaVeEntity implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getIdGiaVe() {
-		return idGiaVe;
+	public int getIdChuyenBay() {
+		return idChuyenBay;
 	}
 
-	public void setIdGiaVe(int idGiaVe) {
-		this.idGiaVe = idGiaVe;
+	public void setIdChuyenBay(int idChuyenBay) {
+		this.idChuyenBay = idChuyenBay;
 	}
 
 	public int getHangVe() {

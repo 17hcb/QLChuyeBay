@@ -45,9 +45,9 @@ public class SanBay extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtMaSB;
 	private JTextField txtTenSB;
-	private static JTable table;
 	private JTextField txtThongTin;
 	private JTextField textsearch;
+	private static JTable table;
 
 	/**
 	 * Launch the application.
@@ -69,7 +69,7 @@ public class SanBay extends JFrame {
 	public static void LoadData() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
-          String qry="select IdSanBay as 'ID', MaSanBay as 'Ma San Bay', TenSanBay as 'Ten san bay', ThongTin as 'Thong tin' from tblsanbay";
+          String qry="select id as 'ID', tensanbay as 'Ten San Bay', tendiemden as 'Ten diem den', ghichu as 'Ghi chu' from sanbay";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
           
@@ -108,16 +108,14 @@ public class SanBay extends JFrame {
 		Panel panel = new Panel();
 		panel.setBounds(5, 5, 424, 39);
 		contentPane.add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Thông tin sân bay");
+		lblNewLabel.setBounds(106, 5, 212, 29);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Mã sân bay");
-		lblNewLabel_1.setBounds(41, 70, 77, 14);
-		contentPane.add(lblNewLabel_1);
-		
-		JLabel lblTnSnBay = new JLabel("Tên sân bay");
+		JLabel lblTnSnBay = new JLabel("Tên điểm đến");
 		lblTnSnBay.setBounds(41, 117, 77, 14);
 		contentPane.add(lblTnSnBay);
 		
@@ -146,9 +144,9 @@ public class SanBay extends JFrame {
 					Session session = factory.getCurrentSession();
 					try {
 						SanBayEntity emp = new SanBayEntity();
-						emp.setMaSanBay(txtMaSB.getText());
-						emp.setTenSanBay(txtTenSB.getText());
-						emp.setThongTin(txtThongTin.getText());
+						emp.setTenSanBay(txtMaSB.getText());
+						emp.setTenDiemDen(txtTenSB.getText());
+						emp.setGhiChu(txtThongTin.getText());
 						
 						session.beginTransaction();
 						
@@ -193,10 +191,10 @@ public class SanBay extends JFrame {
 				Session session = factory.getCurrentSession();
 				try {
 					SanBayEntity emp = new SanBayEntity();
-					emp.setIdSanBay(id);
-					emp.setMaSanBay(txtMaSB.getText());
-					emp.setTenSanBay(txtTenSB.getText());
-					emp.setThongTin(txtThongTin.getText());
+					emp.setId(id);
+					emp.setTenSanBay(txtMaSB.getText());
+					emp.setTenDiemDen(txtTenSB.getText());
+					emp.setGhiChu(txtThongTin.getText());
 					
 					session.beginTransaction();
 					
@@ -214,10 +212,6 @@ public class SanBay extends JFrame {
 		});
 		btnUpdate.setBounds(318, 110, 111, 23);
 		contentPane.add(btnUpdate);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(452, 117, 434, 245);
-		contentPane.add(scrollPane);
 		
 		JButton btnDelete = new JButton("Xóa");
 		btnDelete.addMouseListener(new MouseAdapter() {
@@ -237,7 +231,7 @@ public class SanBay extends JFrame {
 					Session session = factory.getCurrentSession();
 					try {
 						SanBayEntity emp = new SanBayEntity();
-						emp.setIdSanBay(id);
+						emp.setId(id);
 						
 						session.beginTransaction();
 						
@@ -257,9 +251,8 @@ public class SanBay extends JFrame {
 		});
 		btnDelete.setBounds(318, 155, 111, 23);
 		contentPane.add(btnDelete);
-		scrollPane.setViewportView(table);
 		
-		JLabel lblThngTin = new JLabel("Thông tin");
+		JLabel lblThngTin = new JLabel("Ghi chú");
 		lblThngTin.setBounds(41, 158, 77, 14);
 		contentPane.add(lblThngTin);
 		
@@ -303,6 +296,32 @@ public class SanBay extends JFrame {
 		});
 		button.setBounds(318, 201, 111, 23);
 		contentPane.add(button);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(452, 109, 434, 263);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
+		JLabel label_1 = new JLabel("Tên sân bay");
+		label_1.setBounds(41, 70, 77, 14);
+		contentPane.add(label_1);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {
+					 int index = table.getSelectedRow();
+				     DefaultTableModel dtm = (DefaultTableModel)table.getModel(); 
+				     txtMaSB.setText(dtm.getValueAt(index, 1).toString());
+					 txtTenSB.setText(dtm.getValueAt(index, 2).toString());
+					 txtThongTin.setText(dtm.getValueAt(index, 3).toString());  					 
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		
 		
 	}

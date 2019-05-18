@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tblsanbay")
+@Table(name = "sanbay")
 public class SanBayEntity implements Serializable {
 	
 	/**
@@ -20,24 +20,24 @@ public class SanBayEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="IdSanBay")
-	private int idSanBay;	
+	@Column(name="id")
+	private int id;	
 
-	@Column(name="MaSanBay")
-	private String maSanBay;
+	@Column(name="tensanbay")
+	private String tensanbay;
 
-	@Column(name="TenSanBay")
-	private String tenSanBay;	  
+	@Column(name="tendiemden")
+	private String tendiemden;	  
 
-	@Column(name="ThongTin")
-	private String thongTin;
+	@Column(name="ghichu")
+	private String ghichu;
 
-	public SanBayEntity(int idSanBay, String maSanBay, String tenSanBay, String thongTin) {
+	public SanBayEntity(int id, String tensanbay, String tendiemden, String ghichu) {
 		super();
-		this.idSanBay = idSanBay;
-		this.maSanBay = maSanBay;
-		this.tenSanBay = tenSanBay;
-		this.thongTin = thongTin;
+		this.id = id;
+		this.tensanbay = tensanbay;
+		this.tendiemden = tendiemden;
+		this.ghichu = ghichu;
 	}
 
 	public SanBayEntity() {
@@ -45,36 +45,36 @@ public class SanBayEntity implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getIdSanBay() {
-		return idSanBay;
+	public int getId() {
+		return id;
 	}
 
-	public void setIdSanBay(int idSanBay) {
-		this.idSanBay = idSanBay;
-	}
-
-	public String getMaSanBay() {
-		return maSanBay;
-	}
-
-	public void setMaSanBay(String maSanBay) {
-		this.maSanBay = maSanBay;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getTenSanBay() {
-		return tenSanBay;
+		return tensanbay;
 	}
 
-	public void setTenSanBay(String tenSanBay) {
-		this.tenSanBay = tenSanBay;
+	public void setTenSanBay(String tensanbay) {
+		this.tensanbay = tensanbay;
 	}
 
-	public String getThongTin() {
-		return thongTin;
+	public String getTenDiemDen() {
+		return tendiemden;
 	}
 
-	public void setThongTin(String thongTin) {
-		this.thongTin = thongTin;
+	public void setTenDiemDen(String tendiemden) {
+		this.tendiemden = tendiemden;
+	}
+
+	public String getGhiChu() {
+		return ghichu;
+	}
+
+	public void setGhiChu(String ghichu) {
+		this.ghichu = ghichu;
 	}
 
 	public static long getSerialversionuid() {
