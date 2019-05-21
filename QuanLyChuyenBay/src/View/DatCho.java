@@ -6,7 +6,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ComboboxItem.ComboboxItem;
+import JDBC.JDBC;
+
 import java.awt.Panel;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Button;
@@ -14,14 +22,22 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
 
 public class DatCho extends JFrame {
-
+	
+	private static final long serialVersionUID = 6747369890957991308L;
 	private JPanel contentPane;
 	private JTextField txtSBDi;
 	private JTextField txtNgayGio;
 	private JTextField txtSBDen;
-
+	private JTable tblDatCho;
+	private JComboBox cboKhachHang;
+	private JComboBox cboHangVe;
+	private JComboBox cboMaChuyenBay;
 	/**
 	 * Launch the application.
 	 */
@@ -30,6 +46,7 @@ public class DatCho extends JFrame {
 			public void run() {
 				try {
 					DatCho frame = new DatCho();
+					frame.LoadData();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,6 +54,61 @@ public class DatCho extends JFrame {
 			}
 		});
 	}
+	
+	
+    /*public void LoadDataCombobox(JComboBox tenCombobox , String tenTable, int idValues, String nameValues) {
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          
+          // prepare combobox
+          String qry="Select * from" + tenTable;
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);
+          while(rs.next())
+          {
+        	  int id = rs.getInt(idValues);
+        	  String name = rs.getString(nameValues);       	  
+        	  tenCombobox.addItem(new ComboboxItem(name, id));
+
+          }     
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}*/
+	
+    public void LoadDataCombobox() {
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          
+          // prepare combobox
+          String qry="Select * from tblkhachhang";
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);
+          while(rs.next())
+          {
+        	  int idMaChuyenBay = rs.getInt("IDKhachHang");
+        	  String tenMaChuyenBay  = rs.getString("TenKhachHang");
+        	  cboKhachHang.addItem(new ComboboxItem(tenMaChuyenBay, idMaChuyenBay));
+
+          }     
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+
+	protected void LoadData() {
+		// TODO Auto-generated method stub
+		//LoadDataCombobox(cboMaChuyenBay, "tblchuyenbay", "MaChuyenBay", "MaChuyenBay");
+		LoadDataCombobox();
+		
+	}
+
+
+
 
 	/**
 	 * Create the frame.
@@ -62,9 +134,9 @@ public class DatCho extends JFrame {
 		lblNewLabel.setBounds(46, 61, 81, 14);
 		contentPane.add(lblNewLabel);
 		
-		JComboBox cbMaCB = new JComboBox();
-		cbMaCB.setBounds(148, 58, 147, 20);
-		contentPane.add(cbMaCB);
+		cboMaChuyenBay = new JComboBox();
+		cboMaChuyenBay.setBounds(148, 58, 147, 20);
+		contentPane.add(cboMaChuyenBay);
 		
 		txtSBDi = new JTextField();
 		txtSBDi.setBounds(148, 85, 147, 20);
@@ -90,16 +162,25 @@ public class DatCho extends JFrame {
 		contentPane.add(txtSBDen);
 		
 		JButton btnAdd = new JButton("Đặt vé");
-		btnAdd.setBounds(278, 169, 102, 54);
+		btnAdd.setBounds(253, 154, 102, 54);
 		contentPane.add(btnAdd);
 		
 		JLabel lblKhchHng = new JLabel("Khách hàng");
 		lblKhchHng.setBounds(348, 61, 81, 14);
 		contentPane.add(lblKhchHng);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(426, 58, 147, 20);
-		contentPane.add(comboBox);
+	    cboKhachHang = new JComboBox();
+	    cboKhachHang.addItemListener(new ItemListener() {
+	    	public void itemStateChanged(ItemEvent arg0) {
+	    		String v = "";
+	    		v = cboKhachHang.getSelectedItem().toString();
+	    		
+	    		
+	    		
+	    	}
+	    });
+		cboKhachHang.setBounds(426, 58, 147, 20);
+		contentPane.add(cboKhachHang);
 		
 		JLabel lblHngV = new JLabel("Hạng vé");
 		lblHngV.setBounds(46, 113, 81, 14);
@@ -109,8 +190,15 @@ public class DatCho extends JFrame {
 		lblGiTin.setBounds(348, 119, 81, 14);
 		contentPane.add(lblGiTin);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(148, 116, 147, 20);
-		contentPane.add(comboBox_1);
+		cboHangVe = new JComboBox();
+		cboHangVe.setBounds(148, 116, 147, 20);
+		contentPane.add(cboHangVe);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 219, 583, 160);
+		contentPane.add(scrollPane);
+		
+		tblDatCho = new JTable();
+		scrollPane.setViewportView(tblDatCho);
 	}
 }
