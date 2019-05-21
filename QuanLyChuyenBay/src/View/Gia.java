@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import ComboboxItem.ComboboxItem;
 import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
 
@@ -32,6 +33,7 @@ public class Gia extends JFrame {
 	private JTextField txtGia;
 	private static JTable table;
 	private JTextField textField;
+	private static JComboBox cbMaHV;
 
 	/**
 	 * Launch the application.
@@ -41,7 +43,8 @@ public class Gia extends JFrame {
 			public void run() {
 				try {
 					Gia frame = new Gia();
-					LoadData();
+					LoadDataHangVe();
+					LoadDataComboboxKH();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -78,6 +81,28 @@ public class Gia extends JFrame {
           ResultSet rs= st.executeQuery(qry);
           
           table.setModel(DbUtils.resultSetToTableModel(rs));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+	
+	public static void LoadDataComboboxKH() {
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          
+          // prepare combobox
+          String qry="Select * from hangve";
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);
+          while(rs.next())
+          {
+        	  int idKhachHang = rs.getInt("id");
+        	  String tenKhachHang  = rs.getString("tenhangve");
+        	  cbMaHV.addItem(new ComboboxItem(tenKhachHang, idKhachHang));
+
+          }     
 		}
 		catch (Exception e)
 		{
@@ -137,7 +162,7 @@ public class Gia extends JFrame {
 		contentPane.add(txtGia);
 		txtGia.setColumns(10);
 		
-		JComboBox cbMaHV = new JComboBox();
+		cbMaHV = new JComboBox();
 		cbMaHV.setBounds(130, 98, 149, 20);
 		contentPane.add(cbMaHV);
 		
