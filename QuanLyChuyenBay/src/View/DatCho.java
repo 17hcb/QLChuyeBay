@@ -32,7 +32,7 @@ public class DatCho extends JFrame {
 	private static final long serialVersionUID = 6747369890957991308L;
 	private JPanel contentPane;
 	private JTextField txtCMND;
-	private JTextField txtNgayGio;
+	private JTextField txtGiaVe;
 	private JTextField txtSoDienThoai;
 	private JTable tblDatCho;
 	private JComboBox cboKhachHang;
@@ -55,7 +55,7 @@ public class DatCho extends JFrame {
 		});
 	}
 	
-    public void LoadDataCombobox() {
+    public void LoadDataComboboxKH() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
           
@@ -65,9 +65,9 @@ public class DatCho extends JFrame {
           ResultSet rs= st.executeQuery(qry);
           while(rs.next())
           {
-        	  int idMaChuyenBay = rs.getInt("IDKhachHang");
-        	  String tenMaChuyenBay  = rs.getString("TenKhachHang");
-        	  cboKhachHang.addItem(new ComboboxItem(tenMaChuyenBay, idMaChuyenBay));
+        	  int idKhachHang = rs.getInt("IDKhachHang");
+        	  String tenKhachHang  = rs.getString("TenKhachHang");
+        	  cboKhachHang.addItem(new ComboboxItem(tenKhachHang, idKhachHang));
 
           }     
 		}
@@ -77,11 +77,58 @@ public class DatCho extends JFrame {
 		}	
 	}
 
+    
+    public void LoadDataComboboxCB() {
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          
+          // prepare combobox
+          String qry="Select * from tblchuyenbay";
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);
+          while(rs.next())
+          {
+        	  int idMaChuyenBay = rs.getInt("MaChuyenBay");
+        	  String tenMaChuyenBay  = rs.getString("MaChuyenBay");
+        	  cboMaChuyenBay.addItem(new ComboboxItem(tenMaChuyenBay, idMaChuyenBay));
+
+          }     
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+    
+    
+    public void LoadDataComboboxHV() {
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          int MaChuyenBay = ((ComboboxItem)cboKhachHang.getSelectedItem()).HiddenValue();
+          // prepare combobox
+          String qry="Select HangVe from tblgiave where MaChuyenBay =" + MaChuyenBay ;;
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);	
+          while(rs.next())
+          {
+        	  int hangve = rs.getInt("HangVe");
+        	  String strhangve  = rs.getString("HangVe");
+        	  cboHangVe.addItem(new ComboboxItem(strhangve, hangve));
+
+          }     
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+    
 	protected void LoadData() {
 		// TODO Auto-generated method stub
 		//LoadDataCombobox(cboMaChuyenBay, "tblchuyenbay", "MaChuyenBay", "MaChuyenBay");
-		LoadDataCombobox();
-		
+		LoadDataComboboxKH();
+		LoadDataComboboxCB();
+		//LoadDataComboboxHV();
 	}
 
 
@@ -112,6 +159,12 @@ public class DatCho extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		cboMaChuyenBay = new JComboBox();
+		cboMaChuyenBay.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				cboHangVe.removeAllItems();
+				LoadDataComboboxHV();
+			}
+		});
 		cboMaChuyenBay.setBounds(148, 58, 147, 20);
 		contentPane.add(cboMaChuyenBay);
 		
@@ -120,10 +173,10 @@ public class DatCho extends JFrame {
 		contentPane.add(txtCMND);
 		txtCMND.setColumns(10);
 		
-		txtNgayGio = new JTextField();
-		txtNgayGio.setColumns(10);
-		txtNgayGio.setBounds(426, 116, 147, 20);
-		contentPane.add(txtNgayGio);
+		txtGiaVe = new JTextField();
+		txtGiaVe.setColumns(10);
+		txtGiaVe.setBounds(426, 116, 147, 20);
+		contentPane.add(txtGiaVe);
 		
 		JLabel lblCmnd = new JLabel("CMND");
 		lblCmnd.setBounds(46, 88, 81, 14);
@@ -150,6 +203,7 @@ public class DatCho extends JFrame {
 	    cboKhachHang.addItemListener(new ItemListener() {
 	    	public void itemStateChanged(ItemEvent arg0) {    		
 	    		int idKhachHang = ((ComboboxItem)cboKhachHang.getSelectedItem()).HiddenValue();
+	    		
 	    		try {
 		    		Connection conn= (Connection) JDBC.getJDBCConnection();
 		    		
@@ -182,6 +236,26 @@ public class DatCho extends JFrame {
 		contentPane.add(lblGiTin);
 		
 		cboHangVe = new JComboBox();
+		cboHangVe.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				int HangVe = ((ComboboxItem)cboHangVe.getSelectedItem()).HiddenValue();
+				int MaChuyenBay = ((ComboboxItem)cboMaChuyenBay.getSelectedItem()).HiddenValue();
+				try {
+					Connection conn= (Connection) JDBC.getJDBCConnection();
+		    		
+		    		 String qry="Select GiaTien from tblgiave where MaChuyenBay = " + MaChuyenBay + " And HangVe = " + HangVe ;
+		             Statement st= conn.createStatement();
+		             ResultSet rs= st.executeQuery(qry);
+		             while(rs.next())
+		             {
+		           	  txtGiaVe.setText(rs.getString("GiaTien"));		           
+		             }     
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+			}
+		});
 		cboHangVe.setBounds(148, 116, 147, 20);
 		contentPane.add(cboHangVe);
 		
