@@ -31,9 +31,9 @@ public class DatCho extends JFrame {
 	
 	private static final long serialVersionUID = 6747369890957991308L;
 	private JPanel contentPane;
-	private JTextField txtSBDi;
+	private JTextField txtCMND;
 	private JTextField txtNgayGio;
-	private JTextField txtSBDen;
+	private JTextField txtSoDienThoai;
 	private JTable tblDatCho;
 	private JComboBox cboKhachHang;
 	private JComboBox cboHangVe;
@@ -54,29 +54,6 @@ public class DatCho extends JFrame {
 			}
 		});
 	}
-	
-	
-    /*public void LoadDataCombobox(JComboBox tenCombobox , String tenTable, int idValues, String nameValues) {
-		try {
-          Connection conn= (Connection) JDBC.getJDBCConnection();
-          
-          // prepare combobox
-          String qry="Select * from" + tenTable;
-          Statement st= conn.createStatement();
-          ResultSet rs= st.executeQuery(qry);
-          while(rs.next())
-          {
-        	  int id = rs.getInt(idValues);
-        	  String name = rs.getString(nameValues);       	  
-        	  tenCombobox.addItem(new ComboboxItem(name, id));
-
-          }     
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}	
-	}*/
 	
     public void LoadDataCombobox() {
 		try {
@@ -138,10 +115,10 @@ public class DatCho extends JFrame {
 		cboMaChuyenBay.setBounds(148, 58, 147, 20);
 		contentPane.add(cboMaChuyenBay);
 		
-		txtSBDi = new JTextField();
-		txtSBDi.setBounds(148, 85, 147, 20);
-		contentPane.add(txtSBDi);
-		txtSBDi.setColumns(10);
+		txtCMND = new JTextField();
+		txtCMND.setBounds(148, 85, 147, 20);
+		contentPane.add(txtCMND);
+		txtCMND.setColumns(10);
 		
 		txtNgayGio = new JTextField();
 		txtNgayGio.setColumns(10);
@@ -156,10 +133,10 @@ public class DatCho extends JFrame {
 		lblinThoi.setBounds(348, 88, 81, 14);
 		contentPane.add(lblinThoi);
 		
-		txtSBDen = new JTextField();
-		txtSBDen.setColumns(10);
-		txtSBDen.setBounds(426, 88, 147, 20);
-		contentPane.add(txtSBDen);
+		txtSoDienThoai = new JTextField();
+		txtSoDienThoai.setColumns(10);
+		txtSoDienThoai.setBounds(426, 88, 147, 20);
+		contentPane.add(txtSoDienThoai);
 		
 		JButton btnAdd = new JButton("Đặt vé");
 		btnAdd.setBounds(253, 154, 102, 54);
@@ -171,11 +148,25 @@ public class DatCho extends JFrame {
 		
 	    cboKhachHang = new JComboBox();
 	    cboKhachHang.addItemListener(new ItemListener() {
-	    	public void itemStateChanged(ItemEvent arg0) {
-	    		String v = "";
-	    		v = cboKhachHang.getSelectedItem().toString();
-	    		
-	    		
+	    	public void itemStateChanged(ItemEvent arg0) {    		
+	    		int idKhachHang = ((ComboboxItem)cboKhachHang.getSelectedItem()).HiddenValue();
+	    		try {
+		    		Connection conn= (Connection) JDBC.getJDBCConnection();
+		    		
+		    		 String qry="Select * from tblkhachhang where IDKhachHang = " + idKhachHang ;
+		             Statement st= conn.createStatement();
+		             ResultSet rs= st.executeQuery(qry);
+		             while(rs.next())
+		             {
+		           	  txtCMND.setText(rs.getString("CMND"));
+		           	  txtSoDienThoai.setText(rs.getString("SoDienThoai"));
+		             }     
+	    		}
+	    		catch (Exception e) {
+					// TODO: handle exception
+	    			e.printStackTrace();
+				}
+
 	    		
 	    	}
 	    });
