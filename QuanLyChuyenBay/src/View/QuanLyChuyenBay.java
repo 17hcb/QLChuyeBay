@@ -3,9 +3,13 @@ package View;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Panel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,8 +17,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,18 +29,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.toedter.calendar.JDateChooser;
+
 import ComboboxItem.ComboboxItem;
 import Entity.ChuyenBayEntity;
-import Entity.KhachHangEntity;
+import Entity.SanBayTrungGianEntity;
 import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
-
-import com.toedter.calendar.JDateChooser;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JScrollPane;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class QuanLyChuyenBay extends JFrame {
 
@@ -119,10 +121,37 @@ public class QuanLyChuyenBay extends JFrame {
     }
     
     public void LoadData() {
+    	GenerateTableColumn();
     	LoadDataCombobox();
     	LoadDataChuyenBay();
     }
     
+    public int FindInDexInCombobox(JComboBox cbbtemp,int element) {
+    	int size = cbbtemp.getItemCount();
+    	for (int i = 0; i < size; i++) {
+    		int maCanTim = ((ComboboxItem)cbb_SanBayDi.getItemAt(i)).HiddenValue();
+    		if( maCanTim == element)
+    		{
+    			return i;
+    		}
+			
+    	}
+    	return 0;
+    }
+    
+    public void GenerateTableColumn() {
+    	// Khoi tao column cho table san bay trung gian
+    	Object [] columnheader = {"Sân bay trung gian","Thời gian dừng"};
+    	DefaultTableModel modelcolumn = new DefaultTableModel();
+    	modelcolumn.setColumnIdentifiers(columnheader);
+		tbl_SanbayTrungGian.setModel(modelcolumn);
+		
+		// Khoi tao column cho table hang ve
+		Object [] columnheaderHangve = {"STT hạng vé","Số lượng ghế"};
+		DefaultTableModel modelcolumnHangve = new DefaultTableModel();
+		modelcolumnHangve.setColumnIdentifiers(columnheaderHangve);
+		tbl_HangVe.setModel(modelcolumnHangve);
+    }
     
 	/**
 	 * Launch the application.
@@ -178,9 +207,8 @@ public class QuanLyChuyenBay extends JFrame {
 		txtMaTuyenBay.setBounds(190, 60, 215, 20);
 		contentPane.add(txtMaTuyenBay);
 		txtMaTuyenBay.setColumns(10);
-		
-		
-		
+			
+		// Xu ly them chuyen bay
 		JButton btnAdd = new JButton("Thêm mới");
 		btnAdd.addMouseListener(new MouseAdapter() {
 			@Override
@@ -193,6 +221,11 @@ public class QuanLyChuyenBay extends JFrame {
 				if(dc_NgayBay.getDate() == null)
 				{
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày của chuyến bay");
+					return;
+				}
+				if(cbb_SanBayDen.getSelectedIndex() == cbb_SanBayDi.getSelectedIndex())
+				{
+					JOptionPane.showMessageDialog(null, "Sân bay đến không thể trùng sân bay đi");
 					return;
 				}
 				else
@@ -225,9 +258,47 @@ public class QuanLyChuyenBay extends JFrame {
 						
 						session.getTransaction().commit();
 						
+						
+						// them chuyen bay trung gian
+						if(tbl_SanbayTrungGian.getModel().getRowCount() > 0)
+						{
+							SessionFactory factory2 = new Configuration()
+									.configure("hibernate.cfg.xml")
+									.addAnnotatedClass(SanBayTrungGianEntity.class)
+									.buildSessionFactory();
+							Session session2 = factory2.getCurrentSession();
+							try {
+								//set data
+								session2.beginTransaction();
+								
+								for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
+								{
+									SanBayTrungGianEntity sbtg = new SanBayTrungGianEntity();
+									
+									sbtg.setMaChuyenBay(txtMaTuyenBay.getText());
+									int maSanBayTG = ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue();
+									sbtg.setMaSanBay(maSanBayTG);
+									sbtg.setThoiGianDung((int)tbl_SanbayTrungGian.getValueAt(row, 1));
+									
+									session2.save(sbtg);
+									session2.flush();
+								    session2.clear();
+								}
+								
+								session2.getTransaction().commit();
+								//JOptionPane.showMessageDialog(null, "Đã cập nhật san bay trung gian !");
+								tbl_SanbayTrungGian.setModel(new DefaultTableModel());
+								GenerateTableColumn();
+							}
+							finally {
+								factory2.close();
+							}
+						}
+						
+						// reset data after insert
 						JOptionPane.showMessageDialog(null, "Đã thêm chuyến bay thành công !");
 						LoadDataChuyenBay();
-				        ResetField();
+						ResetField();
 					}
 					finally {
 						factory.close();
@@ -238,18 +309,117 @@ public class QuanLyChuyenBay extends JFrame {
 		btnAdd.setBounds(190, 650, 105, 40);
 		contentPane.add(btnAdd);
 		
+		//Xu ly cap nhat chuyen bay
 		JButton btnUpdate = new JButton("Cập nhật");
-		btnUpdate.setBounds(340, 650, 105, 40);
+		btnUpdate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if (tbl_ChuyenBay.getSelectionModel().isSelectionEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin cần cập nhật!");
+					return;
+				}
+				if(txtMaTuyenBay.getText().isEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng nhập mã chuyến bay");
+					return;
+				}
+				if(dc_NgayBay.getDate() == null)
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày của chuyến bay");
+					return;
+				}
+				else
+				{
+				     SessionFactory factory = new Configuration()
+								.configure("hibernate.cfg.xml")
+								.addAnnotatedClass(ChuyenBayEntity.class)
+								.buildSessionFactory();
+					 Session session = factory.getCurrentSession();
+					try {
+						//set data
+						ChuyenBayEntity cbe = new ChuyenBayEntity();
+						cbe.setMaChuyenBay(txtMaTuyenBay.getText());
+						int maSanBayDi = ((ComboboxItem)cbb_SanBayDi.getSelectedItem()).HiddenValue();
+						int maSanBayDen = ((ComboboxItem)cbb_SanBayDen.getSelectedItem()).HiddenValue();
+						cbe.setMaSanBayDi(maSanBayDi);
+						cbe.setMaSanBayDen(maSanBayDen);
+						cbe.setGioCatCanh((int)spi_Gio.getValue());
+						cbe.setPhutCatCanh((int)spi_Phut.getValue());
+						cbe.setNgayBay(dc_NgayBay.getDate().toString());
+						cbe.setGioBay((int)spi_GioBay.getValue());
+						cbe.setPhutBay((int)spi_PhutBay.getValue());
+						cbe.setSoLuongGheHang1((int)spi_SoLuongGhe1.getValue());
+						cbe.setSoLuongGheHang2((int)spi_SoLuongGhe2.getValue());
+						cbe.setCoHangVeBoSung(0);
+						
+						session.beginTransaction();
+						
+						session.saveOrUpdate(cbe);
+						
+						session.getTransaction().commit();
+						
+						JOptionPane.showMessageDialog(null, "Đã cập nhật chuyến bay thành công !");
+						LoadDataChuyenBay();
+						ResetField();
+					}
+					finally {
+						factory.close();
+					}
+				}
+			}
+		});
+		btnUpdate.setBounds(490, 650, 105, 40);
 		contentPane.add(btnUpdate);
 		
+	
+		// Xu ly xoa chuyen bay
 		JButton btnDelete = new JButton("Xóa");
-		btnDelete.setBounds(490, 650, 105, 40);
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				if (tbl_ChuyenBay.getSelectionModel().isSelectionEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin cần xóa!");
+					return;
+				}
+				else
+				{
+					 int index = tbl_ChuyenBay.getSelectedRow();
+				     DefaultTableModel dtm = (DefaultTableModel)tbl_ChuyenBay.getModel(); 
+				     String idChuyenBay = dtm.getValueAt(index, 0).toString();
+					 SessionFactory factory = new Configuration()
+							.configure("hibernate.cfg.xml")
+							.addAnnotatedClass(ChuyenBayEntity.class)
+							.buildSessionFactory();
+					 Session session = factory.getCurrentSession();
+					try {
+						ChuyenBayEntity emp = new ChuyenBayEntity();
+						emp.setMaChuyenBay(idChuyenBay);
+						
+						session.beginTransaction();
+						
+						session.delete(emp);
+						
+						session.getTransaction().commit();
+						
+						JOptionPane.showMessageDialog(null, "Đã xóa chuyến bay thành công !");
+						LoadDataChuyenBay();
+				        ResetField();
+					}
+					finally {
+						factory.close();
+					}
+				}
+			
+			}
+		});
+		btnDelete.setBounds(340, 650, 105, 40);
 		contentPane.add(btnDelete);
 		
-		// Khoi tao column cho table san bay trung gian
-		Object [] columnheader = {"Sân bay trung gian","Thời gian dừng"};
-		DefaultTableModel modelcolumn = new DefaultTableModel();
-		modelcolumn.setColumnIdentifiers(columnheader);
+		
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(190, 220, 635, 65);
@@ -257,7 +427,6 @@ public class QuanLyChuyenBay extends JFrame {
 		
 		tbl_SanbayTrungGian = new JTable();
 		scrollPane.setViewportView(tbl_SanbayTrungGian);
-		tbl_SanbayTrungGian.setModel(modelcolumn);
 		
 		JLabel lblNgyGi = new JLabel("Ngày bay");
 		lblNgyGi.setBounds(50, 120, 95, 20);
@@ -284,13 +453,21 @@ public class QuanLyChuyenBay extends JFrame {
 		btn_ThemSanBayTG.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Object [] row = new Object[2];
-				row[0] = cbb_SanBayTrungGian.getSelectedItem();
-				row[1] = spi_ThoiGianDung.getValue();
-				
-				DefaultTableModel model = (DefaultTableModel) tbl_SanbayTrungGian.getModel();
-				model.addRow(row);
-				tbl_SanbayTrungGian.setModel(model);
+				if(cbb_SanBayTrungGian.getSelectedIndex() == cbb_SanBayDi.getSelectedIndex() || cbb_SanBayTrungGian.getSelectedIndex() == cbb_SanBayDen.getSelectedIndex())
+				{
+					JOptionPane.showMessageDialog(null, "Sân bay trung gian trùng với sân bay đến hoặc sân bay đi !");
+					return;
+				}
+				else
+				{
+					Object [] row = new Object[2];
+					row[0] = cbb_SanBayTrungGian.getSelectedItem();
+					row[1] = spi_ThoiGianDung.getValue();
+					
+					DefaultTableModel model = (DefaultTableModel) tbl_SanbayTrungGian.getModel();
+					model.addRow(row);
+					tbl_SanbayTrungGian.setModel(model);
+				}
 			}
 		});
 		btn_ThemSanBayTG.setBounds(5, 220, 175, 25);
@@ -322,7 +499,38 @@ public class QuanLyChuyenBay extends JFrame {
 		scrollPane_1.setBounds(5, 500, 870, 130);
 		contentPane.add(scrollPane_1);
 		
+		// Xu ly load du lieu theo dong chon
 		tbl_ChuyenBay = new JTable();
+		tbl_ChuyenBay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					 int index = tbl_ChuyenBay.getSelectedRow();
+				     DefaultTableModel dtm = (DefaultTableModel)tbl_ChuyenBay.getModel(); 
+				     
+				     txtMaTuyenBay.setText(dtm.getValueAt(index, 0).toString());
+				     
+				     int index1 = FindInDexInCombobox(cbb_SanBayDi, (int)dtm.getValueAt(index, 1));
+				     int index2 = FindInDexInCombobox(cbb_SanBayDen, (int)dtm.getValueAt(index, 2));
+				     cbb_SanBayDi.setSelectedIndex(index1);
+				     cbb_SanBayDen.setSelectedIndex(index2);			
+				     
+					 spi_Gio.setValue(dtm.getValueAt(index, 3));
+					 spi_Phut.setValue(dtm.getValueAt(index, 4));
+					 spi_GioBay.setValue(dtm.getValueAt(index, 6));
+					 spi_PhutBay.setValue(dtm.getValueAt(index, 7));
+					 spi_SoLuongGhe1.setValue(dtm.getValueAt(index, 8));
+					 spi_SoLuongGhe2.setValue(dtm.getValueAt(index, 9));
+					 
+					 Date dateload = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(dtm.getValueAt(index, 5).toString());
+					 dc_NgayBay.setDate(dateload);
+						 
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		scrollPane_1.setViewportView(tbl_ChuyenBay);
 		
 		textField_4 = new JTextField();
@@ -334,7 +542,14 @@ public class QuanLyChuyenBay extends JFrame {
 		lblTmKim.setBounds(120, 470, 60, 20);
 		contentPane.add(lblTmKim);
 		
+		//Xu ly reset 
 		JButton btnThitLpLi = new JButton("Thiết lập lại");
+		btnThitLpLi.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ResetField();
+			}
+		});
 		btnThitLpLi.setBounds(640, 650, 105, 40);
 		contentPane.add(btnThitLpLi);
 		
@@ -396,10 +611,7 @@ public class QuanLyChuyenBay extends JFrame {
 		label.setBounds(795, 180, 30, 20);
 		contentPane.add(label);
 		
-		// Khoi tao column cho table hang ve
-		Object [] columnheaderHangve = {"STT hạng vé","Số lượng ghế"};
-		DefaultTableModel modelcolumnHangve = new DefaultTableModel();
-		modelcolumnHangve.setColumnIdentifiers(columnheaderHangve);
+	
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(190, 350, 635, 65);
@@ -407,7 +619,6 @@ public class QuanLyChuyenBay extends JFrame {
 		
 		tbl_HangVe = new JTable();
 		scrollPane_2.setViewportView(tbl_HangVe);
-		tbl_HangVe.setModel(modelcolumnHangve);
 		
 		//Xu ly them 1 hang ve bo sung
 		JButton btn_BoSungHangVe = new JButton("Bổ sung hạng vé");
