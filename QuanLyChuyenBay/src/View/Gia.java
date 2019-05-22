@@ -34,6 +34,8 @@ public class Gia extends JFrame {
 	private static JTable table;
 	private JTextField textField;
 	private static JComboBox cbMaHV;
+	private static JComboBox cbMaCB;
+	private static JComboBox comboBox;
 
 	/**
 	 * Launch the application.
@@ -44,28 +46,14 @@ public class Gia extends JFrame {
 				try {
 					Gia frame = new Gia();
 					LoadDataHangVe();
-					LoadDataComboboxKH();
+					LoadDataComboboxHV();
+					LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}
-	
-	public static void LoadData() {
-		try {
-          Connection conn= (Connection) JDBC.getJDBCConnection();
-          String qry="select sb.tensanbay as 'Ten San Bay', sb.tendiemden as 'Ten Diem Den', hv.tenhangve as 'Ten Hang Ve', gv.giatien as 'Gia Tien' from sanbay sb join giave gv on sb.id = gv.id_chuyenbay join hangve hv on hv.id = gv.hangve";
-          Statement st= conn.createStatement();
-          ResultSet rs= st.executeQuery(qry);
-          
-          table.setModel(DbUtils.resultSetToTableModel(rs));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}	
 	}
 	
 	public static void LoadDataHangVe() {
@@ -88,7 +76,7 @@ public class Gia extends JFrame {
 		}	
 	}
 	
-	public static void LoadDataComboboxKH() {
+	public static void LoadDataComboboxHV() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
           
@@ -98,9 +86,9 @@ public class Gia extends JFrame {
           ResultSet rs= st.executeQuery(qry);
           while(rs.next())
           {
-        	  int idKhachHang = rs.getInt("id");
-        	  String tenKhachHang  = rs.getString("tenhangve");
-        	  cbMaHV.addItem(new ComboboxItem(tenKhachHang, idKhachHang));
+        	  int id = rs.getInt("id");
+        	  String tenHV  = rs.getString("tenhangve");
+        	  cbMaHV.addItem(new ComboboxItem(tenHV, id));
 
           }     
 		}
@@ -111,6 +99,44 @@ public class Gia extends JFrame {
 	}
 	
 	public static void LoadDataChuyenBay() {
+		try {
+			  Connection conn= (Connection) JDBC.getJDBCConnection();
+			  String qry="select * from sanbay";
+			  Statement st= conn.createStatement();
+			  ResultSet rs= st.executeQuery(qry);
+			  while(rs.next()) {
+				  int id = rs.getInt("id");
+				  String tenHV  = rs.getString("tensanbay");
+				  cbMaCB.addItem(new ComboboxItem(tenHV, id));
+				  comboBox.addItem(new ComboboxItem(tenHV, id));
+			  }  
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+	
+	public static void LoadDataChuyenBayDi() {
+		try {
+			  Connection conn= (Connection) JDBC.getJDBCConnection();
+			  String qry="select cb.idsanbaydi, sb.tensanbay from sanbay sb join chuyenbay cb on sb.id = cb.idsanbaydi";
+			  Statement st= conn.createStatement();
+			  ResultSet rs= st.executeQuery(qry);
+			  while(rs.next()) {
+				  int id = rs.getInt("idsanbaydi");
+				  String tenHV  = rs.getString("tensanbay");
+				  cbMaCB.addItem(new ComboboxItem(tenHV, id));
+			
+			  }  
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+	
+	public static void LoadDataChuyenBayDen() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
           String qry="select sb.tensanbay as 'Ten San Bay', sb.tendiemden as 'Ten Diem Den', hv.tenhangve as 'Ten Hang Ve', gv.giatien as 'Gia Tien' from sanbay sb join giave gv on sb.id = gv.id_chuyenbay join hangve hv on hv.id = gv.hangve";
@@ -145,41 +171,41 @@ public class Gia extends JFrame {
 		lblThngTinGi.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel.add(lblThngTinGi);
 		
-		JLabel lblNewLabel = new JLabel("Chuyến bay");
+		JLabel lblNewLabel = new JLabel("Chuyến bay đi");
 		lblNewLabel.setBounds(30, 66, 90, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblMHngV = new JLabel("Hạng vé");
-		lblMHngV.setBounds(30, 101, 90, 14);
+		lblMHngV.setBounds(30, 128, 90, 14);
 		contentPane.add(lblMHngV);
 		
 		JLabel lblGi = new JLabel("Giá tiền");
-		lblGi.setBounds(30, 133, 90, 14);
+		lblGi.setBounds(30, 166, 90, 14);
 		contentPane.add(lblGi);
 		
 		txtGia = new JTextField();
-		txtGia.setBounds(130, 130, 149, 20);
+		txtGia.setBounds(130, 163, 211, 20);
 		contentPane.add(txtGia);
 		txtGia.setColumns(10);
 		
 		cbMaHV = new JComboBox();
-		cbMaHV.setBounds(130, 98, 149, 20);
+		cbMaHV.setBounds(130, 125, 259, 20);
 		contentPane.add(cbMaHV);
 		
-		JComboBox cbMaCB = new JComboBox();
-		cbMaCB.setBounds(130, 63, 149, 20);
+		cbMaCB = new JComboBox();
+		cbMaCB.setBounds(130, 63, 259, 20);
 		contentPane.add(cbMaCB);
 		
 		JButton btnAdd = new JButton("Thêm mới");
-		btnAdd.setBounds(318, 62, 106, 23);
+		btnAdd.setBounds(30, 208, 106, 23);
 		contentPane.add(btnAdd);
 		
 		JButton btnUpdate = new JButton("Cập nhật");
-		btnUpdate.setBounds(318, 97, 106, 23);
+		btnUpdate.setBounds(165, 208, 106, 23);
 		contentPane.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Xóa");
-		btnDelete.setBounds(318, 129, 106, 23);
+		btnDelete.setBounds(307, 208, 106, 23);
 		contentPane.add(btnDelete);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -217,8 +243,20 @@ public class Gia extends JFrame {
 		panel_1.setBounds(439, 5, 434, 39);
 		contentPane.add(panel_1);
 		
-		JLabel lblDanhSchSn = new JLabel("Danh sách sân giá vé");
+		JLabel lblDanhSchSn = new JLabel("Danh sách giá vé");
 		lblDanhSchSn.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel_1.add(lblDanhSchSn);
+		
+		comboBox = new JComboBox();
+		comboBox.setBounds(130, 94, 259, 20);
+		contentPane.add(comboBox);
+		
+		JLabel lblChuynBayn = new JLabel("Chuyến bay đến");
+		lblChuynBayn.setBounds(30, 94, 90, 14);
+		contentPane.add(lblChuynBayn);
+		
+		JLabel lblVn = new JLabel("VNĐ");
+		lblVn.setBounds(351, 166, 37, 14);
+		contentPane.add(lblVn);
 	}
 }
