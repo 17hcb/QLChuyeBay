@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import ComboboxItem.ComboboxItem;
 import JDBC.JDBC;
+import net.proteanit.sql.DbUtils;
 
 import java.awt.Panel;
 import java.sql.Connection;
@@ -25,6 +26,8 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class DatCho extends JFrame {
@@ -34,7 +37,7 @@ public class DatCho extends JFrame {
 	private JTextField txtCMND;
 	private JTextField txtGiaVe;
 	private JTextField txtSoDienThoai;
-	private JTable tblDatCho;
+	private static JTable tblDatCho;
 	private JComboBox cboKhachHang;
 	private JComboBox cboHangVe;
 	private JComboBox cboMaChuyenBay;
@@ -123,12 +126,32 @@ public class DatCho extends JFrame {
 		}	
 	}
     
+    public static void LoadDataTable() {
+		try {
+          Connection conn= (Connection) JDBC.getJDBCConnection();
+          String qry="select d.IDDatCho as 'ID', d.MaChuyenBay as 'Ma Chuyen Bay', k.TenKhachHang as 'Ten Khach Hang'"
+          			+ ", k.CMND as 'CMND', k.SoDienThoai as 'So Dien Thoai', g.HangVe as 'Hang Ve', g.GiaTien as 'Gia Tien' "
+        		  	+ "from tbldatcho d "
+        		  	+ "left join tblkhachhang k on d.IDKhachHang = k.IDKhachHang "
+        		  	+ "left join tblgiave g on g.MaChuyenBay = d.MaChuyenBay and g.HangVe = d.HangVe ";
+          Statement st= conn.createStatement();
+          ResultSet rs= st.executeQuery(qry);
+          
+          tblDatCho.setModel(DbUtils.resultSetToTableModel(rs));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+    
 	protected void LoadData() {
 		// TODO Auto-generated method stub
 		//LoadDataCombobox(cboMaChuyenBay, "tblchuyenbay", "MaChuyenBay", "MaChuyenBay");
 		LoadDataComboboxKH();
 		LoadDataComboboxCB();
 		//LoadDataComboboxHV();
+		LoadDataTable();
 	}
 
 
@@ -191,9 +214,18 @@ public class DatCho extends JFrame {
 		txtSoDienThoai.setBounds(426, 88, 147, 20);
 		contentPane.add(txtSoDienThoai);
 		
-		JButton btnAdd = new JButton("Đặt vé");
-		btnAdd.setBounds(253, 154, 102, 54);
-		contentPane.add(btnAdd);
+		JButton btnDatVe = new JButton("Đặt vé");
+		btnDatVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Save();				
+			}
+
+			private void Save() {
+				// TODO Auto-generated method stub				
+			}
+		});
+		btnDatVe.setBounds(114, 154, 102, 54);
+		contentPane.add(btnDatVe);
 		
 		JLabel lblKhchHng = new JLabel("Khách hàng");
 		lblKhchHng.setBounds(348, 61, 81, 14);
@@ -265,5 +297,13 @@ public class DatCho extends JFrame {
 		
 		tblDatCho = new JTable();
 		scrollPane.setViewportView(tblDatCho);
+		
+		JButton btnThayDoiVe = new JButton("Thay đổi vé");
+		btnThayDoiVe.setBounds(264, 154, 102, 54);
+		contentPane.add(btnThayDoiVe);
+		
+		JButton btnHuyVe = new JButton("Hủy vé");
+		btnHuyVe.setBounds(412, 154, 102, 54);
+		contentPane.add(btnHuyVe);
 	}
 }
