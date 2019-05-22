@@ -6,8 +6,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import ComboboxItem.ComboboxItem;
+import Entity.DatChoEntity;
+import Entity.KhachHangEntity;
+import Entity.MayBayEntity;
 import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
 
@@ -17,6 +25,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Button;
 import javax.swing.JComboBox;
@@ -154,8 +164,13 @@ public class DatCho extends JFrame {
 		LoadDataTable();
 	}
 
-
-
+	protected void ResetField() {
+		// TODO Auto-generated method stub
+		cboHangVe.removeAllItems();
+		cboKhachHang.removeAllItems();
+		cboMaChuyenBay.removeAllItems();
+		LoadDataComboboxHV();
+	}
 
 	/**
 	 * Create the frame.
@@ -221,7 +236,28 @@ public class DatCho extends JFrame {
 			}
 
 			private void Save() {
-				// TODO Auto-generated method stub				
+				// TODO Auto-generated method stub		
+				SessionFactory factory = new Configuration()
+						.configure("hibernate.cfg.xml")
+						.addAnnotatedClass(KhachHangEntity.class)
+						.buildSessionFactory();
+				Session session = factory.getCurrentSession();
+				try {
+					DatChoEntity dc = new DatChoEntity();
+					String machuyenbay = ((ComboboxItem)cboMaChuyenBay.getSelectedItem()).toString();
+					dc.setMaChuyenBay(machuyenbay);
+					dc.setIdKhachHang(((ComboboxItem)cboKhachHang.getSelectedItem()).HiddenValue());
+					dc.setHangVe(((ComboboxItem)cboHangVe.getSelectedItem()).HiddenValue());
+					session.beginTransaction();
+					session.save(dc);		
+					session.getTransaction().commit();			
+					JOptionPane.showMessageDialog(null, "Đặt chổ thành công !");
+					LoadDataTable();
+					ResetField();
+				}
+				finally {
+					factory.close();
+				}
 			}
 		});
 		btnDatVe.setBounds(114, 154, 102, 54);
@@ -238,7 +274,6 @@ public class DatCho extends JFrame {
 	    		
 	    		try {
 		    		Connection conn= (Connection) JDBC.getJDBCConnection();
-		    		
 		    		 String qry="Select * from tblkhachhang where IDKhachHang = " + idKhachHang ;
 		             Statement st= conn.createStatement();
 		             ResultSet rs= st.executeQuery(qry);
@@ -252,8 +287,6 @@ public class DatCho extends JFrame {
 					// TODO: handle exception
 	    			e.printStackTrace();
 				}
-
-	    		
 	    	}
 	    });
 		cboKhachHang.setBounds(426, 58, 147, 20);
@@ -274,7 +307,6 @@ public class DatCho extends JFrame {
 				int MaChuyenBay = ((ComboboxItem)cboMaChuyenBay.getSelectedItem()).HiddenValue();
 				try {
 					Connection conn= (Connection) JDBC.getJDBCConnection();
-		    		
 		    		 String qry="Select GiaTien from tblgiave where MaChuyenBay = " + MaChuyenBay + " And HangVe = " + HangVe ;
 		             Statement st= conn.createStatement();
 		             ResultSet rs= st.executeQuery(qry);
@@ -299,10 +331,87 @@ public class DatCho extends JFrame {
 		scrollPane.setViewportView(tblDatCho);
 		
 		JButton btnThayDoiVe = new JButton("Thay đổi vé");
+		btnThayDoiVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (tblDatCho.getSelectionModel().isSelectionEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn máy bay cần cập nhật!");
+					return;
+				}
+				int index = tblDatCho.getSelectedRow();
+			    DefaultTableModel dtm = (DefaultTableModel)tblDatCho.getModel(); 
+			    int id = Integer.parseInt(dtm.getValueAt(index, 0).toString());
+				SessionFactory factory = new Configuration()
+						.configure("hibernate.cfg.xml")
+						.addAnnotatedClass(KhachHangEntity.class)
+						.buildSessionFactory();
+				Session session = factory.getCurrentSession();
+				try {
+					DatChoEntity dc = new DatChoEntity();
+					
+					String machuyenbay = ((ComboboxItem)cboMaChuyenBay.getSelectedItem()).toString();
+					dc.setIdDatCho(id);
+					dc.setMaChuyenBay(machuyenbay);
+					dc.setIdKhachHang(((ComboboxItem)cboKhachHang.getSelectedItem()).HiddenValue());
+					dc.setHangVe(((ComboboxItem)cboHangVe.getSelectedItem()).HiddenValue());
+					session.beginTransaction();
+					
+					session.saveOrUpdate(dc);
+					
+					session.getTransaction().commit();
+					
+					JOptionPane.showMessageDialog(null, "Cập nhật đặt chổ thành công !");
+					LoadData();
+			        ResetField();
+				}
+				finally {
+					factory.close();
+				}
+			}
+		});
 		btnThayDoiVe.setBounds(264, 154, 102, 54);
 		contentPane.add(btnThayDoiVe);
 		
 		JButton btnHuyVe = new JButton("Hủy vé");
+		btnHuyVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (tblDatCho.getSelectionModel().isSelectionEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin cần xóa!");
+					return;
+				}
+				else
+				{
+					 int index = tblDatCho.getSelectedRow();
+				     DefaultTableModel dtm = (DefaultTableModel)tblDatCho.getModel(); 
+				     int id = Integer.parseInt(dtm.getValueAt(index, 0).toString());
+					SessionFactory factory = new Configuration()
+							.configure("hibernate.cfg.xml")
+							.addAnnotatedClass(KhachHangEntity.class)
+							.buildSessionFactory();
+					Session session = factory.getCurrentSession();
+					try {
+						DatChoEntity dc = new DatChoEntity();
+						dc.setIdDatCho(id);
+						
+						session.beginTransaction();
+						
+						session.delete(dc);
+						
+						session.getTransaction().commit();
+						
+						JOptionPane.showMessageDialog(null, "Đã xóa đặt chổ thành công !");
+						LoadData();
+						ResetField();
+					}
+					finally {
+						factory.close();
+					}
+				}
+			}
+
+
+		});
 		btnHuyVe.setBounds(412, 154, 102, 54);
 		contentPane.add(btnHuyVe);
 	}
