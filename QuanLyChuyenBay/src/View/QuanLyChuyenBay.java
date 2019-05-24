@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Query;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
 
 import com.toedter.calendar.JDateChooser;
 
@@ -95,6 +97,33 @@ public class QuanLyChuyenBay extends JFrame {
             ResultSet rs = st.executeQuery(qry);
 	  
 	        tbl_ChuyenBay.setModel(DbUtils.resultSetToTableModel(rs)); 
+    	}
+    	catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+    }
+    
+    public void LoadDataSanBayTrungGian(String machuyenbay) {
+    	  // prepare table view
+    	 tbl_SanbayTrungGian.setModel(new DefaultTableModel());
+	     GenerateTableColumn();
+    	try {
+            Connection conn= (Connection) JDBC.getJDBCConnection();
+            String qry = "SELECT t2.TenSanBay, t1.ThoiGianDung FROM tblsanbaytrunggian t1 JOIN tblsanbay t2 ON t1.MaSanBay = t2.IdSanBay WHERE t1.MaChuyenBay = '" +machuyenbay+"'";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(qry);
+	  
+            DefaultTableModel model = (DefaultTableModel) tbl_SanbayTrungGian.getModel();
+            while(rs.next())
+            {
+            	Object [] row = new Object[2];
+    			row[0] = rs.getString("TenSanBay");
+    			row[1] = rs.getInt("ThoiGianDung");
+    			
+    			model.addRow(row);
+            }
+            tbl_SanbayTrungGian.setModel(model);
     	}
     	catch (Exception e)
 		{
@@ -360,6 +389,55 @@ public class QuanLyChuyenBay extends JFrame {
 						
 						session.getTransaction().commit();
 						
+						// xoa chuyen bay trung gian
+			     		try {
+					     	Connection newconn= (Connection) JDBC.getJDBCConnection();
+				            String qrydel = "Delete from tblsanbaytrunggian where MaChuyenBay = '" + txtMaTuyenBay.getText() + "'";
+				            Statement stdel = newconn.createStatement();
+				            stdel.executeUpdate(qrydel);
+			     			}
+			     		catch (Exception ex)
+			     			{
+			     				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
+			     				ex.printStackTrace();
+			     			}	
+						
+			     		// them chuyen bay trung gian
+						if(tbl_SanbayTrungGian.getModel().getRowCount() > 0)
+						{
+							SessionFactory factory2 = new Configuration()
+									.configure("hibernate.cfg.xml")
+									.addAnnotatedClass(SanBayTrungGianEntity.class)
+									.buildSessionFactory();
+							Session session2 = factory2.getCurrentSession();
+							try {
+								//set data
+								session2.beginTransaction();
+								
+								for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
+								{
+									SanBayTrungGianEntity sbtg = new SanBayTrungGianEntity();
+									
+									sbtg.setMaChuyenBay(txtMaTuyenBay.getText());
+									int maSanBayTG = ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue();
+									sbtg.setMaSanBay(maSanBayTG);
+									sbtg.setThoiGianDung((int)tbl_SanbayTrungGian.getValueAt(row, 1));
+									
+									session2.save(sbtg);
+									session2.flush();
+								    session2.clear();
+								}
+								
+								session2.getTransaction().commit();
+								//JOptionPane.showMessageDialog(null, "Đã cập nhật san bay trung gian !");
+								tbl_SanbayTrungGian.setModel(new DefaultTableModel());
+								GenerateTableColumn();
+							}
+							finally {
+								factory2.close();
+							}
+						}
+			     		
 						JOptionPane.showMessageDialog(null, "Đã cập nhật chuyến bay thành công !");
 						LoadDataChuyenBay();
 						ResetField();
@@ -405,6 +483,22 @@ public class QuanLyChuyenBay extends JFrame {
 						
 						session.getTransaction().commit();
 						
+						// xoa chuyen bay trung gian
+				     		try {
+						     	Connection newconn= (Connection) JDBC.getJDBCConnection();
+					            String qrydel = "Delete from tblsanbaytrunggian where MaChuyenBay = '" + idChuyenBay + "'";
+					            Statement stdel = newconn.createStatement();
+					            stdel.executeUpdate(qrydel);
+					            //JOptionPane.showMessageDialog(null, "Xóa sân bay trung gian thành công !");
+					            tbl_SanbayTrungGian.setModel(new DefaultTableModel());
+								GenerateTableColumn();
+				     			}
+				     		catch (Exception e)
+				     			{
+				     				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
+				     				e.printStackTrace();
+				     			}	
+				     
 						JOptionPane.showMessageDialog(null, "Đã xóa chuyến bay thành công !");
 						LoadDataChuyenBay();
 				        ResetField();
@@ -460,6 +554,17 @@ public class QuanLyChuyenBay extends JFrame {
 				}
 				else
 				{
+					// kiem tra ton tai
+					for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
+					{
+						if(((ComboboxItem)cbb_SanBayTrungGian.getSelectedItem()).HiddenValue() == ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue() )
+						{
+							JOptionPane.showMessageDialog(null, "Sân bay trung gian này đã tồn tại !");
+							return;
+						}
+					}
+					
+					// them san bay trung gian
 					Object [] row = new Object[2];
 					row[0] = cbb_SanBayTrungGian.getSelectedItem();
 					row[1] = spi_ThoiGianDung.getValue();
@@ -524,7 +629,8 @@ public class QuanLyChuyenBay extends JFrame {
 					 
 					 Date dateload = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(dtm.getValueAt(index, 5).toString());
 					 dc_NgayBay.setDate(dateload);
-						 
+					 
+					 LoadDataSanBayTrungGian(dtm.getValueAt(index, 0).toString());	 
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
