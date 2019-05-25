@@ -110,7 +110,7 @@ public class QuanLyChuyenBay extends JFrame {
 	     GenerateTableColumn();
     	try {
             Connection conn= (Connection) JDBC.getJDBCConnection();
-            String qry = "SELECT t2.TenSanBay, t1.ThoiGianDung FROM tblsanbaytrunggian t1 JOIN tblsanbay t2 ON t1.MaSanBay = t2.IdSanBay WHERE t1.MaChuyenBay = '" +machuyenbay+"'";
+            String qry = "SELECT t2.IdSanBay, t2.TenSanBay, t1.ThoiGianDung FROM tblsanbaytrunggian t1 JOIN tblsanbay t2 ON t1.MaSanBay = t2.IdSanBay WHERE t1.MaChuyenBay = '" +machuyenbay+"'";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(qry);
 	  
@@ -118,7 +118,9 @@ public class QuanLyChuyenBay extends JFrame {
             while(rs.next())
             {
             	Object [] row = new Object[2];
-    			row[0] = rs.getString("TenSanBay");
+            	
+            	ComboboxItem temp = new ComboboxItem(rs.getString("TenSanBay"), Integer.parseInt(rs.getString("IdSanBay")));
+    			row[0] = temp;
     			row[1] = rs.getInt("ThoiGianDung");
     			
     			model.addRow(row);
@@ -557,7 +559,7 @@ public class QuanLyChuyenBay extends JFrame {
 					// kiem tra ton tai
 					for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
 					{
-						if(((ComboboxItem)cbb_SanBayTrungGian.getSelectedItem()).HiddenValue() == ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue() )
+						if(((ComboboxItem)cbb_SanBayTrungGian.getSelectedItem()).toString().equals(tbl_SanbayTrungGian.getValueAt(row, 0).toString()))
 						{
 							JOptionPane.showMessageDialog(null, "Sân bay trung gian này đã tồn tại !");
 							return;
