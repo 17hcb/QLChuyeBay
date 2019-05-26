@@ -8,7 +8,9 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Query;
@@ -276,7 +278,12 @@ public class QuanLyChuyenBay extends JFrame {
 						cbe.setMaSanBayDen(maSanBayDen);
 						cbe.setGioCatCanh((int)spi_Gio.getValue());
 						cbe.setPhutCatCanh((int)spi_Phut.getValue());
-						cbe.setNgayBay(dc_NgayBay.getDate().toString());
+						
+						Date date = dc_NgayBay.getDate();  
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+						String strDate = dateFormat.format(date);  
+						cbe.setNgayBay(strDate);
+						
 						cbe.setGioBay((int)spi_GioBay.getValue());
 						cbe.setPhutBay((int)spi_PhutBay.getValue());
 						cbe.setSoLuongGheHang1((int)spi_SoLuongGhe1.getValue());
@@ -378,7 +385,13 @@ public class QuanLyChuyenBay extends JFrame {
 						cbe.setMaSanBayDen(maSanBayDen);
 						cbe.setGioCatCanh((int)spi_Gio.getValue());
 						cbe.setPhutCatCanh((int)spi_Phut.getValue());
-						cbe.setNgayBay(dc_NgayBay.getDate().toString());
+						//cbe.setNgayBay(dc_NgayBay.getDate().toString());
+						
+						Date date = dc_NgayBay.getDate();  
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+						String strDate = dateFormat.format(date);  
+						cbe.setNgayBay(strDate);
+						
 						cbe.setGioBay((int)spi_GioBay.getValue());
 						cbe.setPhutBay((int)spi_PhutBay.getValue());
 						cbe.setSoLuongGheHang1((int)spi_SoLuongGhe1.getValue());
@@ -629,7 +642,7 @@ public class QuanLyChuyenBay extends JFrame {
 					 spi_SoLuongGhe1.setValue(dtm.getValueAt(index, 8));
 					 spi_SoLuongGhe2.setValue(dtm.getValueAt(index, 9));
 					 
-					 Date dateload = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(dtm.getValueAt(index, 5).toString());
+					 Date dateload = new SimpleDateFormat("yyyy-mm-dd").parse(dtm.getValueAt(index, 5).toString());
 					 dc_NgayBay.setDate(dateload);
 					 
 					 LoadDataSanBayTrungGian(dtm.getValueAt(index, 0).toString());	 
@@ -671,6 +684,7 @@ public class QuanLyChuyenBay extends JFrame {
 		
 		dc_NgayBay = new JDateChooser();
 		dc_NgayBay.setBounds(190, 120, 215, 20);
+		dc_NgayBay.setDateFormatString("yyyy-MM-dd");
 		contentPane.add(dc_NgayBay);
 		
 		spi_Gio = new JSpinner();
