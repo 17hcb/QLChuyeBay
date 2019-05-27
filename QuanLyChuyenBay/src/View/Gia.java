@@ -26,6 +26,10 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Gia extends JFrame {
 
@@ -47,6 +51,7 @@ public class Gia extends JFrame {
 					Gia frame = new Gia();
 					LoadDataHangVe();
 					LoadDataComboboxHV();
+					
 					LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -108,7 +113,6 @@ public class Gia extends JFrame {
 				  int id = rs.getInt("id");
 				  String tenHV  = rs.getString("tensanbay");
 				  cbMaCB.addItem(new ComboboxItem(tenHV, id));
-				  comboBox.addItem(new ComboboxItem(tenHV, id));
 			  }  
 		}
 		catch (Exception e)
@@ -150,6 +154,24 @@ public class Gia extends JFrame {
 			e.printStackTrace();
 		}	
 	}
+	
+	public static void LoadDataChuyenBayDenWithItem(int item) {
+		try {
+			  Connection conn= (Connection) JDBC.getJDBCConnection();
+			  String qry="Select * from chuyenbay cb join sanbay sb on cb.idsanbayden = sb.id where idsanbaydi = " + item;
+			  Statement st= conn.createStatement();
+			  ResultSet rs= st.executeQuery(qry);
+			  while(rs.next()) {
+				  int id = rs.getInt("idsanbaydi");
+				  String tenHV  = rs.getString("tensanbay");
+				  comboBox.addItem(new ComboboxItem(tenHV, id));
+			  }  
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Create the frame.
@@ -171,7 +193,7 @@ public class Gia extends JFrame {
 		lblThngTinGi.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel.add(lblThngTinGi);
 		
-		JLabel lblNewLabel = new JLabel("Chuyến bay đi");
+		JLabel lblNewLabel = new JLabel("Sân bay đi");
 		lblNewLabel.setBounds(30, 66, 90, 14);
 		contentPane.add(lblNewLabel);
 		
@@ -193,10 +215,24 @@ public class Gia extends JFrame {
 		contentPane.add(cbMaHV);
 		
 		cbMaCB = new JComboBox();
+		cbMaCB.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(arg0.getStateChange() == ItemEvent.SELECTED) {
+					comboBox.removeAllItems();
+					int idSBDi = ((ComboboxItem)cbMaCB.getSelectedItem()).HiddenValue();
+					LoadDataChuyenBayDenWithItem(idSBDi);
+				}
+			}
+		});
 		cbMaCB.setBounds(130, 63, 259, 20);
 		contentPane.add(cbMaCB);
 		
 		JButton btnAdd = new JButton("Thêm mới");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btnAdd.setBounds(30, 208, 106, 23);
 		contentPane.add(btnAdd);
 		
@@ -251,7 +287,7 @@ public class Gia extends JFrame {
 		comboBox.setBounds(130, 94, 259, 20);
 		contentPane.add(comboBox);
 		
-		JLabel lblChuynBayn = new JLabel("Chuyến bay đến");
+		JLabel lblChuynBayn = new JLabel("Sân bay đến");
 		lblChuynBayn.setBounds(30, 94, 90, 14);
 		contentPane.add(lblChuynBayn);
 		
