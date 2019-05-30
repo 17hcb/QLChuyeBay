@@ -7,31 +7,45 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import ComboboxItem.ComboboxItem;
+import Entity.GiaVeEntity;
+import Entity.SanBayEntity;
 import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.Panel;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class Gia extends JFrame {
+public class Gia extends JFrame implements Serializable {
 
 	private JPanel contentPane;
 	private JTextField txtGia;
@@ -68,7 +82,7 @@ public class Gia extends JFrame {
           		"from sanbay sb1 \r\n" + 
           		"			join chuyenbay cb on sb1.id = cb.idsanbaydi\r\n" + 
           		"			join sanbay sb2 on sb2.id = cb.idsanbayden\r\n" + 
-          		"			join giave gv on gv.id_chuyenbay = cb.idchuyenbay\r\n" + 
+          		"			join giave gv on gv.idchuyenbay = cb.idchuyenbay\r\n" + 
           		"			join hangve hv on hv.id = gv.hangve";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
@@ -143,7 +157,7 @@ public class Gia extends JFrame {
 	public static void LoadDataChuyenBayDen() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
-          String qry="select sb.tensanbay as 'Ten San Bay', sb.tendiemden as 'Ten Diem Den', hv.tenhangve as 'Ten Hang Ve', gv.giatien as 'Gia Tien' from sanbay sb join giave gv on sb.id = gv.id_chuyenbay join hangve hv on hv.id = gv.hangve";
+          String qry="select sb.tensanbay as 'Ten San Bay', sb.tendiemden as 'Ten Diem Den', hv.tenhangve as 'Ten Hang Ve', gv.giatien as 'Gia Tien' from sanbay sb join giave gv on sb.id = gv.idchuyenbay join hangve hv on hv.id = gv.hangve";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
           
@@ -162,7 +176,7 @@ public class Gia extends JFrame {
 			  Statement st= conn.createStatement();
 			  ResultSet rs= st.executeQuery(qry);
 			  while(rs.next()) {
-				  int id = rs.getInt("idsanbaydi");
+				  int id = rs.getInt("idsanbayden");
 				  String tenHV  = rs.getString("tensanbay");
 				  comboBox.addItem(new ComboboxItem(tenHV, id));
 			  }  
@@ -230,7 +244,60 @@ public class Gia extends JFrame {
 		JButton btnAdd = new JButton("Thêm mới");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				int idSBDi = ((ComboboxItem)cbMaCB.getSelectedItem()).HiddenValue();
+				int idSBDen = ((ComboboxItem)comboBox.getSelectedItem()).HiddenValue();
+				int hangve =  ((ComboboxItem)cbMaHV.getSelectedItem()).HiddenValue();
+				try {
+			          Connection conn= (Connection) JDBC.getJDBCConnection();
+			          String qry="select count(*) as total \r\n" + 
+			          		"from chuyenbay cb join giave gv on cb.idchuyenbay = gv.idchuyenbay join hangve hv on gv.hangve = hv.id\r\n" + 
+			          		"where cb.idsanbaydi = " + idSBDi + " and cb.idsanbayden = " + idSBDen +" and hv.id = " + hangve;
+			          Statement st= conn.createStatement();
+			          ResultSet rs= st.executeQuery(qry);
+			          rs.next();
+			          if(rs.getInt("total") > 0) {
+			        	  JOptionPane.showMessageDialog(null, "Giá vé đã tồn tại. Vui lòng chỉnh sửa!");
+			        	  return;
+			          } if(txtGia.getText().isEmpty()) {
+			        	  JOptionPane.showMessageDialog(null, "Vui lòng nhập giá tiền!");
+							return;
+			          } else {
+			        	  
+			        	  String qry1="select cb.idchuyenbay as result \r\n" + 
+					          		"from chuyenbay cb where cb.idsanbaydi = " + idSBDi + " and cb.idsanbayden = " + idSBDen;
+				          ResultSet rs1= st.executeQuery(qry1);
+			        	  SessionFactory factory = new Configuration()
+									.configure("hibernate.cfg.xml")
+									.addAnnotatedClass(GiaVeEntity.class)
+									.buildSessionFactory();
+							Session session = factory.getCurrentSession();
+							
+							try {
+								while(rs1.next())
+								{
+									GiaVeEntity dc = new GiaVeEntity();
+									int idchuyenbay1 = rs1.getInt("result");
+									dc.setIdChuyenBay(idchuyenbay1);
+									dc.setHangVe(hangve);
+									dc.setGiaTien(Integer.parseInt(txtGia.getText()));
+									session.beginTransaction();
+									session.save(dc);		
+									session.getTransaction().commit();			
+									JOptionPane.showMessageDialog(null, "Thêm giá vé thành công !");
+									LoadDataHangVe();
+									break;
+								}
+								
+							}
+							finally {
+								factory.close();
+							}
+			          }
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}	
 			}
 		});
 		btnAdd.setBounds(30, 208, 106, 23);
@@ -241,6 +308,53 @@ public class Gia extends JFrame {
 		contentPane.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Xóa");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int idSBDi = ((ComboboxItem)cbMaCB.getSelectedItem()).HiddenValue();
+				int idSBDen = ((ComboboxItem)comboBox.getSelectedItem()).HiddenValue();
+				int hangve =  ((ComboboxItem)cbMaHV.getSelectedItem()).HiddenValue();
+				SessionFactory factory = new Configuration()
+						.configure("hibernate.cfg.xml")
+						.addAnnotatedClass(GiaVeEntity.class)
+						.buildSessionFactory();
+				Session session = factory.getCurrentSession();
+				
+				String qry1="select cb.idchuyenbay as result \r\n" + 
+		          		"from chuyenbay cb where cb.idsanbaydi = " + idSBDi + " and cb.idsanbayden = " + idSBDen;
+				
+				try {
+					Connection conn= (Connection) JDBC.getJDBCConnection();
+					Statement st1;
+					try {
+						st1 = conn.createStatement();
+						ResultSet rs1= st1.executeQuery(qry1);
+						while(rs1.next())
+						{
+							GiaVeEntity dc = new GiaVeEntity();
+							int idchuyenbay1 = rs1.getInt("result");
+							dc.setIdChuyenBay(idchuyenbay1);
+							dc.setHangVe(hangve);
+							session.beginTransaction();
+							session.delete(dc);		
+							session.getTransaction().commit();			
+							JOptionPane.showMessageDialog(null, "Đã xóa giá vé thành công !");
+							LoadDataHangVe();
+							break;
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
+					
+				}
+				finally {
+					LoadDataHangVe();
+					factory.close();
+				}
+			}
+		});
 		btnDelete.setBounds(307, 208, 106, 23);
 		contentPane.add(btnDelete);
 		
@@ -271,6 +385,15 @@ public class Gia extends JFrame {
 		contentPane.add(label);
 		
 		textField = new JTextField();
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)table.getModel());
+				table.setRowSorter(sorter);
+				
+				sorter.setRowFilter(RowFilter.regexFilter(textField.getText().trim()));
+			}
+		});
 		textField.setColumns(10);
 		textField.setBounds(533, 70, 340, 20);
 		contentPane.add(textField);

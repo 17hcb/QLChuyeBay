@@ -18,8 +18,7 @@ public class GiaVeEntity implements Serializable {
 	private static final long serialVersionUID = 683697712940111955L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id_chuyenbay")
+	@Column(name="idchuyenbay")
 	private int idChuyenBay;	
 
 	@Column(name="hangve")
