@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tbldatcho")
+@Table(name = "tblvedatcho")
 public class DatChoEntity implements Serializable{
 	private static final long serialVersionUID = -6128488731574364904L;
 	
@@ -27,6 +27,35 @@ public class DatChoEntity implements Serializable{
 
 	@Column(name="HangVe")
 	private int hangVe;
+
+	@Column(name="GiaVe")
+	private int giaVe;
+
+	@Column(name="SoLuong")
+	private int soLuong;
+
+	@Column(name="GhiChu")
+	private String ghiChu;
+	
+	@Column(name="TinhTrang")
+	private String tinhTrang;
+
+	public DatChoEntity(int idDatCho, String maChuyenBay, int idKhachHang, int hangVe, int giaVe, int soLuong,
+			String ghiChu, String tinhTrang) {
+		super();
+		this.idDatCho = idDatCho;
+		this.maChuyenBay = maChuyenBay;
+		this.idKhachHang = idKhachHang;
+		this.hangVe = hangVe;
+		this.giaVe = giaVe;
+		this.soLuong = soLuong;
+		this.ghiChu = ghiChu;
+		this.tinhTrang = tinhTrang;
+	}
+
+	public DatChoEntity() {
+		super();
+	}
 
 	public int getIdDatCho() {
 		return idDatCho;
@@ -60,22 +89,36 @@ public class DatChoEntity implements Serializable{
 		this.hangVe = hangVe;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public int getGiaVe() {
+		return giaVe;
 	}
 
-	public DatChoEntity() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void setGiaVe(int giaVe) {
+		this.giaVe = giaVe;
 	}
 
-	public DatChoEntity(int idDatCho, String maChuyenBay, int idKhachHang, int hangVe) {
-		super();
-		this.idDatCho = idDatCho;
-		this.maChuyenBay = maChuyenBay;
-		this.idKhachHang = idKhachHang;
-		this.hangVe = hangVe;
-	}	  
-	
+	public int getSoLuong() {
+		return soLuong;
+	}
+
+	public void setSoLuong(int soLuong) {
+		this.soLuong = soLuong;
+	}
+
+	public String getGhiChu() {
+		return ghiChu;
+	}
+
+	public void setGhiChu(String ghiChu) {
+		this.ghiChu = ghiChu;
+	}
+
+	public String getTinhTrang() {
+		return tinhTrang;
+	}
+
+	public void setTinhTrang(String tinhTrang) {
+		this.tinhTrang = tinhTrang;
+	}
 	
 }

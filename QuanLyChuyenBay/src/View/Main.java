@@ -145,16 +145,16 @@ public class Main {
 		menuQuanLy.add(itemQLSanBay);
 		
 		JMenuItem itemQLTuyenBay = new JMenuItem("Quản lý tuyến bay");
-		itemQLTuyenBay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TuyenBay tb = new TuyenBay();
-				tabbedPane.addTab("Tuyến bay", tb.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
-			}
-		});
+//		itemQLTuyenBay.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				TuyenBay tb = new TuyenBay();
+//				tabbedPane.addTab("Tuyến bay", tb.getContentPane());
+//				if (tabbedPane.getComponentCount() > 1)
+//				{
+//					tabbedPane.remove(0);
+//				}
+//			}
+//		});
 		menuQuanLy.add(itemQLTuyenBay);
 		
 		JMenuItem itemQLMayBay = new JMenuItem("Quản lý máy bay");
@@ -253,17 +253,17 @@ public class Main {
 		menuBar.add(menuBaoCao);
 		
 		JMenuItem itemDTBVThang = new JMenuItem("Doanh thu bán vé tháng");
-		itemDTBVThang.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DoanhThuThang dtt = new DoanhThuThang();
-				tabbedPane.addTab("Doanh Thu Tháng", dtt.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
-				
-			}
-		});
+//		itemDTBVThang.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				DoanhThuThang dtt = new DoanhThuThang();
+//				tabbedPane.addTab("Doanh Thu Tháng", dtt.getContentPane());
+//				if (tabbedPane.getComponentCount() > 1)
+//				{
+//					tabbedPane.remove(0);
+//				}
+//				
+//			}
+//		});
 		menuBaoCao.add(itemDTBVThang);
 	}
 

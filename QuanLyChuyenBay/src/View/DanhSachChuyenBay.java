@@ -112,6 +112,7 @@ public class DanhSachChuyenBay extends JFrame {
 		// Xu ly them chuyen bay
 		JButton btnDatVe = new JButton("Đặt vé");
 		btnDatVe.addMouseListener(new MouseAdapter() {
+			@SuppressWarnings("static-access")
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (tbl_ChuyenBay.getSelectionModel().isSelectionEmpty())
@@ -129,6 +130,9 @@ public class DanhSachChuyenBay extends JFrame {
 			    if(SoGheConTrong > 0)
 			    {
 			    	JOptionPane.showMessageDialog(null, "Mời đặt chỗ - Số ghế còn trống " + SoGheConTrong);
+			    	DatCho newframe = new DatCho();
+			    	newframe.main(null, dtm.getValueAt(index, 0).toString());
+			    	newframe.setVisible(true);
 					return;
 			    }
 			    else
@@ -138,29 +142,8 @@ public class DanhSachChuyenBay extends JFrame {
 			    }
 			}
 		});
-		btnDatVe.setBounds(255, 410, 105, 40);
+		btnDatVe.setBounds(330, 390, 120, 60);
 		contentPane.add(btnDatVe);
-		
-	
-		// Xu ly xoa chuyen bay
-		JButton btnDelete = new JButton("Hủy đặt vé");
-		btnDelete.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (tbl_ChuyenBay.getSelectionModel().isSelectionEmpty())
-				{
-					JOptionPane.showMessageDialog(null, "Vui lòng chọn chuyến bay để hủy đặt vé");
-					return;
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Chuan bi lam");
-					return;
-				}
-			}
-		});
-		btnDelete.setBounds(500, 410, 105, 40);
-		contentPane.add(btnDelete);
 		
 		txtTimKiem = new JTextField();
 		txtTimKiem.addKeyListener(new KeyAdapter() {
