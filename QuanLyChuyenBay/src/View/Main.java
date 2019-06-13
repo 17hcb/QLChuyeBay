@@ -160,12 +160,6 @@ public class Main {
 		JMenuItem itemQLMayBay = new JMenuItem("Quản lý máy bay");
 		itemQLMayBay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MayBay mb = new MayBay();
-				tabbedPane.addTab("Máy bay", mb.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
 			}
 		});
 		menuQuanLy.add(itemQLMayBay);
@@ -173,12 +167,6 @@ public class Main {
 		JMenuItem itemQLLichBay = new JMenuItem("Quản lý lịch bay");
 		itemQLLichBay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LichBay lb = new LichBay();
-				tabbedPane.addTab("Lịch bay", lb.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
 			}
 		});
 		menuQuanLy.add(itemQLLichBay);
@@ -186,12 +174,6 @@ public class Main {
 		JMenuItem itemQLHangVe = new JMenuItem("Quản lý hạng vé");
 		itemQLHangVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				HangVe hv = new HangVe();
-				tabbedPane.addTab("Hạng Vé", hv.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
 			}
 		});
 		menuQuanLy.add(itemQLHangVe);

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "giave")
+@Table(name = "tblgiave")
 public class GiaVeEntity implements Serializable {
 	/**
 	 * 
@@ -18,13 +18,13 @@ public class GiaVeEntity implements Serializable {
 	private static final long serialVersionUID = 683697712940111955L;
 
 	@Id
-	@Column(name="idchuyenbay")
+	@Column(name="IdChuyenBay")
 	private int idChuyenBay;	
 
-	@Column(name="hangve")
+	@Column(name="HangVe")
 	private int hangVe;
 
-	@Column(name="giatien")
+	@Column(name="GiaTien")
 	private int giaTien;	  
 
 	public GiaVeEntity(int idChuyenBay, int hangVe, int giaTien) {

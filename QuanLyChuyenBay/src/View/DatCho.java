@@ -92,6 +92,7 @@ public class DatCho extends JFrame {
 	public void GetData(String data) {
 		 cboMaChuyenBay.removeAllItems();
 		 cboMaChuyenBay.addItem(data);
+		 cboMaChuyenBay.setSelectedItem(data);
 		 cboMaChuyenBay.setEditable(false);
 	}
     public void LoadDataComboboxKH() {
@@ -130,8 +131,6 @@ public class DatCho extends JFrame {
         	  String maChuyenBay = rs.getString("MaChuyenBay");
         	  cboMaChuyenBay.addItem(maChuyenBay);
           }     
-          MACHUYENBAY = "CB002";
-          LoadDataComboboxHV(MACHUYENBAY);
 		}
 		catch (Exception e)
 		{
@@ -144,7 +143,7 @@ public class DatCho extends JFrame {
 		try {
 		
           Connection conn= (Connection) JDBC.getJDBCConnection();
-          
+          cboHangVe.removeAllItems();
           // prepare combobox
           String qry="Select HangVe from tblgiave where IdChuyenBay ='" + MaChuyenBay +"'";
           Statement st= conn.createStatement();
@@ -184,6 +183,7 @@ public class DatCho extends JFrame {
 		LoadDataComboboxKH();
 		LoadDataComboboxCB();
 		LoadDataTable();
+		
 	}
 
 	protected void ResetField() {
@@ -218,6 +218,15 @@ public class DatCho extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		cboMaChuyenBay = new JComboBox();
+		cboMaChuyenBay.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(cboMaChuyenBay.getSelectedItem() != null)
+				{
+					MACHUYENBAY = cboMaChuyenBay.getSelectedItem().toString();
+			        LoadDataComboboxHV(MACHUYENBAY);
+				}
+			}
+		});
 		cboMaChuyenBay.setBounds(150, 60, 200, 20);
 		contentPane.add(cboMaChuyenBay);
 		

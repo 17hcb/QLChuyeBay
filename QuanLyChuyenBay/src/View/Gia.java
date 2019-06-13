@@ -48,11 +48,11 @@ import java.awt.event.KeyEvent;
 public class Gia extends JFrame implements Serializable {
 
 	private JPanel contentPane;
-	private JTextField txtGia;
+	private JTextField txt_GiaTien;
 	private static JTable table;
 	private JTextField textField;
-	private static JComboBox cbMaHV;
-	private static JComboBox cbMaCB;
+	private static JComboBox cbb_HangVe;
+	private static JComboBox cbb_MaChuyenBay;
 	private static JComboBox comboBox;
 
 	/**
@@ -64,7 +64,6 @@ public class Gia extends JFrame implements Serializable {
 				try {
 					Gia frame = new Gia();
 					LoadDataHangVe();
-					LoadDataComboboxHV();
 					
 					LoadDataChuyenBay();
 					frame.setVisible(true);
@@ -78,12 +77,11 @@ public class Gia extends JFrame implements Serializable {
 	public static void LoadDataHangVe() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
-          String qry="select sb1.tensanbay as 'Ten San Bay Di', sb2.tensanbay as 'Ten San Bay Den', hv.tenhangve as 'Hang Ve', gv.giatien as 'Gia Tien'\r\n" + 
-          		"from sanbay sb1 \r\n" + 
-          		"			join chuyenbay cb on sb1.id = cb.idsanbaydi\r\n" + 
-          		"			join sanbay sb2 on sb2.id = cb.idsanbayden\r\n" + 
-          		"			join giave gv on gv.idchuyenbay = cb.idchuyenbay\r\n" + 
-          		"			join hangve hv on hv.id = gv.hangve";
+          String qry="select cb.MaChuyenBay as 'Ma Chuyen Bay', sb1.tensanbay as 'Ten San Bay Di', sb2.tensanbay as 'Ten San Bay Den', gv.HangVe as 'Hang Ve', gv.GiaTien as 'Gia Tien'\r\n" + 
+          		"from tblchuyenbay cb\r\n" + 
+          		"join tblsanbay sb1 on sb1.IdSanBay = cb.MaSanBayDi\r\n" + 
+          		"join tblsanbay sb2 on sb2.IdSanBay = cb.MaSanBayDen\r\n" + 
+          		"join tblgiave gv on gv.Idchuyenbay = cb.MaChuyenBay";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
           
@@ -95,19 +93,18 @@ public class Gia extends JFrame implements Serializable {
 		}	
 	}
 	
-	public static void LoadDataComboboxHV() {
+	public static void LoadDataComboboxHV(String MaChuyenBay) {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
-          
+          cbb_HangVe.removeAllItems();
           // prepare combobox
-          String qry="Select * from hangve";
+          String qry="Select HangVe from tblgiave where IdChuyenBay ='" + MaChuyenBay +"'";
           Statement st= conn.createStatement();
-          ResultSet rs= st.executeQuery(qry);
+          ResultSet rs= st.executeQuery(qry);	
           while(rs.next())
           {
-        	  int id = rs.getInt("id");
-        	  String tenHV  = rs.getString("tenhangve");
-        	  cbMaHV.addItem(new ComboboxItem(tenHV, id));
+        	  int hangve = rs.getInt("HangVe");
+        	  cbb_HangVe.addItem(hangve);
 
           }     
 		}
@@ -120,13 +117,12 @@ public class Gia extends JFrame implements Serializable {
 	public static void LoadDataChuyenBay() {
 		try {
 			  Connection conn= (Connection) JDBC.getJDBCConnection();
-			  String qry="select * from sanbay";
+			  String qry="select * from tblchuyenbay";
 			  Statement st= conn.createStatement();
 			  ResultSet rs= st.executeQuery(qry);
 			  while(rs.next()) {
-				  int id = rs.getInt("id");
-				  String tenHV  = rs.getString("tensanbay");
-				  cbMaCB.addItem(new ComboboxItem(tenHV, id));
+				  String maCB  = rs.getString("MaChuyenBay");
+				  cbb_MaChuyenBay.addItem(maCB);
 			  }  
 		}
 		catch (Exception e)
@@ -144,7 +140,7 @@ public class Gia extends JFrame implements Serializable {
 			  while(rs.next()) {
 				  int id = rs.getInt("idsanbaydi");
 				  String tenHV  = rs.getString("tensanbay");
-				  cbMaCB.addItem(new ComboboxItem(tenHV, id));
+				  cbb_MaChuyenBay.addItem(new ComboboxItem(tenHV, id));
 			
 			  }  
 		}
@@ -219,34 +215,30 @@ public class Gia extends JFrame implements Serializable {
 		lblGi.setBounds(30, 166, 90, 14);
 		contentPane.add(lblGi);
 		
-		txtGia = new JTextField();
-		txtGia.setBounds(130, 163, 211, 20);
-		contentPane.add(txtGia);
-		txtGia.setColumns(10);
+		txt_GiaTien = new JTextField();
+		txt_GiaTien.setBounds(130, 163, 211, 20);
+		contentPane.add(txt_GiaTien);
+		txt_GiaTien.setColumns(10);
 		
-		cbMaHV = new JComboBox();
-		cbMaHV.setBounds(130, 125, 259, 20);
-		contentPane.add(cbMaHV);
+		cbb_HangVe = new JComboBox();
+		cbb_HangVe.setBounds(130, 125, 259, 20);
+		contentPane.add(cbb_HangVe);
 		
-		cbMaCB = new JComboBox();
-		cbMaCB.addItemListener(new ItemListener() {
+		cbb_MaChuyenBay = new JComboBox();
+		cbb_MaChuyenBay.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
-				if(arg0.getStateChange() == ItemEvent.SELECTED) {
-					comboBox.removeAllItems();
-					int idSBDi = ((ComboboxItem)cbMaCB.getSelectedItem()).HiddenValue();
-					LoadDataChuyenBayDenWithItem(idSBDi);
-				}
+				LoadDataComboboxHV(cbb_MaChuyenBay.getSelectedItem().toString());
 			}
 		});
-		cbMaCB.setBounds(130, 63, 259, 20);
-		contentPane.add(cbMaCB);
+		cbb_MaChuyenBay.setBounds(130, 63, 259, 20);
+		contentPane.add(cbb_MaChuyenBay);
 		
 		JButton btnAdd = new JButton("Thêm mới");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int idSBDi = ((ComboboxItem)cbMaCB.getSelectedItem()).HiddenValue();
+				int idSBDi = ((ComboboxItem)cbb_MaChuyenBay.getSelectedItem()).HiddenValue();
 				int idSBDen = ((ComboboxItem)comboBox.getSelectedItem()).HiddenValue();
-				int hangve =  ((ComboboxItem)cbMaHV.getSelectedItem()).HiddenValue();
+				int hangve =  ((ComboboxItem)cbb_HangVe.getSelectedItem()).HiddenValue();
 				try {
 			          Connection conn= (Connection) JDBC.getJDBCConnection();
 			          String qry="select count(*) as total \r\n" + 
@@ -258,7 +250,7 @@ public class Gia extends JFrame implements Serializable {
 			          if(rs.getInt("total") > 0) {
 			        	  JOptionPane.showMessageDialog(null, "Giá vé đã tồn tại. Vui lòng chỉnh sửa!");
 			        	  return;
-			          } if(txtGia.getText().isEmpty()) {
+			          } if(txt_GiaTien.getText().isEmpty()) {
 			        	  JOptionPane.showMessageDialog(null, "Vui lòng nhập giá tiền!");
 							return;
 			          } else {
@@ -279,7 +271,7 @@ public class Gia extends JFrame implements Serializable {
 									int idchuyenbay1 = rs1.getInt("result");
 									dc.setIdChuyenBay(idchuyenbay1);
 									dc.setHangVe(hangve);
-									dc.setGiaTien(Integer.parseInt(txtGia.getText()));
+									dc.setGiaTien(Integer.parseInt(txt_GiaTien.getText()));
 									session.beginTransaction();
 									session.save(dc);		
 									session.getTransaction().commit();			
@@ -310,9 +302,9 @@ public class Gia extends JFrame implements Serializable {
 		JButton btnDelete = new JButton("Xóa");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int idSBDi = ((ComboboxItem)cbMaCB.getSelectedItem()).HiddenValue();
+				int idSBDi = ((ComboboxItem)cbb_MaChuyenBay.getSelectedItem()).HiddenValue();
 				int idSBDen = ((ComboboxItem)comboBox.getSelectedItem()).HiddenValue();
-				int hangve =  ((ComboboxItem)cbMaHV.getSelectedItem()).HiddenValue();
+				int hangve =  ((ComboboxItem)cbb_HangVe.getSelectedItem()).HiddenValue();
 				SessionFactory factory = new Configuration()
 						.configure("hibernate.cfg.xml")
 						.addAnnotatedClass(GiaVeEntity.class)
@@ -367,7 +359,7 @@ public class Gia extends JFrame implements Serializable {
 				     DefaultTableModel dtm = (DefaultTableModel)table.getModel(); 
 //				     txtMaSB.setText(dtm.getValueAt(index, 1).toString());
 //					 txtTenSB.setText(dtm.getValueAt(index, 2).toString());
-					 txtGia.setText(dtm.getValueAt(index, 3).toString());  					 
+					 txt_GiaTien.setText(dtm.getValueAt(index, 3).toString());  					 
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();

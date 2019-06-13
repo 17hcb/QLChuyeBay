@@ -69,7 +69,7 @@ public class SanBay extends JFrame {
 	public static void LoadData() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
-          String qry="select id as 'ID', tensanbay as 'Ten San Bay', tendiemden as 'Ten diem den', ghichu as 'Ghi chu' from sanbay";
+          String qry="select IdSanBay as 'ID', MaSanBay as 'Ma San Bay', TenSanBay as 'Ten San Bay', ThongTin as 'Thong Tin' from tblsanbay";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
           
@@ -144,9 +144,9 @@ public class SanBay extends JFrame {
 					Session session = factory.getCurrentSession();
 					try {
 						SanBayEntity emp = new SanBayEntity();
-						emp.setTenSanBay(txtMaSB.getText());
-						emp.setTenDiemDen(txtTenSB.getText());
-						emp.setGhiChu(txtThongTin.getText());
+						emp.setMaSanBay(txtMaSB.getText());
+						emp.setTenSanBay(txtTenSB.getText());
+						emp.setThongTin(txtThongTin.getText());
 						
 						session.beginTransaction();
 						
@@ -191,10 +191,10 @@ public class SanBay extends JFrame {
 				Session session = factory.getCurrentSession();
 				try {
 					SanBayEntity emp = new SanBayEntity();
-					emp.setId(id);
-					emp.setTenSanBay(txtMaSB.getText());
-					emp.setTenDiemDen(txtTenSB.getText());
-					emp.setGhiChu(txtThongTin.getText());
+					emp.setIdSanBay(id);
+					emp.setMaSanBay(txtMaSB.getText());
+					emp.setTenSanBay(txtTenSB.getText());
+					emp.setThongTin(txtThongTin.getText());
 					
 					session.beginTransaction();
 					
@@ -231,7 +231,7 @@ public class SanBay extends JFrame {
 					Session session = factory.getCurrentSession();
 					try {
 						SanBayEntity emp = new SanBayEntity();
-						emp.setId(id);
+						emp.setIdSanBay(id);
 						
 						session.beginTransaction();
 						
