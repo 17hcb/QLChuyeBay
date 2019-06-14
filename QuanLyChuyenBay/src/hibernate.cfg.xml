@@ -21,7 +21,6 @@
 <mapping class="Entity.SanBayEntity" />
 <mapping class="Entity.DatChoEntity" />
 <mapping class="Entity.GiaVeEntity" />
-<mapping class="Entity.HangVeEntity" />
 
 </session-factory>
 </hibernate-configuration>

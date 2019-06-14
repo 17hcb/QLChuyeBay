@@ -14,8 +14,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import ComboboxItem.ComboboxItem;
+import Entity.ChuyenBayEntity;
 import Entity.GiaVeEntity;
 import Entity.SanBayEntity;
+import Entity.SanBayTrungGianEntity;
 import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
 
@@ -24,6 +26,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -53,7 +58,8 @@ public class Gia extends JFrame implements Serializable {
 	private JTextField textField;
 	private static JComboBox cbb_HangVe;
 	private static JComboBox cbb_MaChuyenBay;
-	private static JComboBox comboBox;
+	private JTextField txtSBDi;
+	private JTextField txtSBDen;
 
 	/**
 	 * Launch the application.
@@ -64,7 +70,6 @@ public class Gia extends JFrame implements Serializable {
 				try {
 					Gia frame = new Gia();
 					LoadDataHangVe();
-					
 					LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -131,58 +136,72 @@ public class Gia extends JFrame implements Serializable {
 		}	
 	}
 	
-	public static void LoadDataChuyenBayDi() {
+	public Integer getIdGiaVe(String idChuyenBay,String hangVe) {
+		int idGiaVe = 0;
 		try {
 			  Connection conn= (Connection) JDBC.getJDBCConnection();
-			  String qry="select cb.idsanbaydi, sb.tensanbay from sanbay sb join chuyenbay cb on sb.id = cb.idsanbaydi";
+			  String qry="select IdGiaVe\r\n" + 
+		          		"from tblgiave gv \r\n" + 
+		          		"where gv.IdChuyenBay = '" + idChuyenBay +"'\r\n"+
+		          		"and gv.HangVe = '" +  hangVe +"'";
 			  Statement st= conn.createStatement();
 			  ResultSet rs= st.executeQuery(qry);
 			  while(rs.next()) {
-				  int id = rs.getInt("idsanbaydi");
-				  String tenHV  = rs.getString("tensanbay");
-				  cbb_MaChuyenBay.addItem(new ComboboxItem(tenHV, id));
+				  idGiaVe  = rs.getInt("IdGiaVe");
+			  }  
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 			
-			  }  
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
 		}	
+		return idGiaVe;
 	}
 	
-	public static void LoadDataChuyenBayDen() {
-		try {
-          Connection conn= (Connection) JDBC.getJDBCConnection();
-          String qry="select sb.tensanbay as 'Ten San Bay', sb.tendiemden as 'Ten Diem Den', hv.tenhangve as 'Ten Hang Ve', gv.giatien as 'Gia Tien' from sanbay sb join giave gv on sb.id = gv.idchuyenbay join hangve hv on hv.id = gv.hangve";
-          Statement st= conn.createStatement();
-          ResultSet rs= st.executeQuery(qry);
-          
-          table.setModel(DbUtils.resultSetToTableModel(rs));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}	
-	}
-	
-	public static void LoadDataChuyenBayDenWithItem(int item) {
-		try {
-			  Connection conn= (Connection) JDBC.getJDBCConnection();
-			  String qry="Select * from chuyenbay cb join sanbay sb on cb.idsanbayden = sb.id where idsanbaydi = " + item;
-			  Statement st= conn.createStatement();
-			  ResultSet rs= st.executeQuery(qry);
-			  while(rs.next()) {
-				  int id = rs.getInt("idsanbayden");
-				  String tenHV  = rs.getString("tensanbay");
-				  comboBox.addItem(new ComboboxItem(tenHV, id));
-			  }  
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+	public void UpdateGiaVe() {
 
+		
+		if (txt_GiaTien.getText().isEmpty())
+		{
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập giá tiền");
+			return;
+		}
+		else
+		{
+		     SessionFactory factory = new Configuration()
+						.configure("hibernate.cfg.xml")
+						.addAnnotatedClass(GiaVeEntity.class)
+						.buildSessionFactory();
+			 Session session = factory.getCurrentSession();
+			try {
+				//set data
+				GiaVeEntity giave = new GiaVeEntity();
+				
+				
+				int idgiave = getIdGiaVe(cbb_MaChuyenBay.getSelectedItem().toString(),cbb_HangVe.getSelectedItem().toString());
+				
+				giave.setIdGiaVe(idgiave);
+				giave.setIdChuyenBay(cbb_MaChuyenBay.getSelectedItem().toString());
+				giave.setHangVe(Integer.parseInt(cbb_HangVe.getSelectedItem().toString()));
+				giave.setGiaTien(Integer.parseInt(txt_GiaTien.getText().toString()));
+				
+				
+				session.beginTransaction();
+				
+				session.update(giave);
+				
+				session.getTransaction().commit();
+				
+				JOptionPane.showMessageDialog(null, "Cập nhật giá vé thành công !");
+				
+				LoadDataHangVe();
+			}
+			finally {
+				factory.close();
+			}
+		}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -196,7 +215,7 @@ public class Gia extends JFrame implements Serializable {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 424, 35);
+		panel.setBounds(5, 5, 425, 35);
 		contentPane.add(panel);
 		
 		JLabel lblThngTinGi = new JLabel("Thông tin giá vé");
@@ -204,176 +223,105 @@ public class Gia extends JFrame implements Serializable {
 		panel.add(lblThngTinGi);
 		
 		JLabel lblNewLabel = new JLabel("Sân bay đi");
-		lblNewLabel.setBounds(30, 66, 90, 14);
+		lblNewLabel.setBounds(30, 95, 90, 15);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblMHngV = new JLabel("Hạng vé");
-		lblMHngV.setBounds(30, 128, 90, 14);
+		lblMHngV.setBounds(30, 170, 90, 15);
 		contentPane.add(lblMHngV);
 		
 		JLabel lblGi = new JLabel("Giá tiền");
-		lblGi.setBounds(30, 166, 90, 14);
+		lblGi.setBounds(30, 210, 90, 15);
 		contentPane.add(lblGi);
 		
 		txt_GiaTien = new JTextField();
-		txt_GiaTien.setBounds(130, 163, 211, 20);
+		txt_GiaTien.setBounds(130, 210, 210, 20);
 		contentPane.add(txt_GiaTien);
 		txt_GiaTien.setColumns(10);
 		
 		cbb_HangVe = new JComboBox();
-		cbb_HangVe.setBounds(130, 125, 259, 20);
+		cbb_HangVe.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				try {
+			          Connection conn= (Connection) JDBC.getJDBCConnection();
+			          // prepare 
+			          String qry="select GiaTIen\r\n" + 
+			          		"from tblchuyenbay cb \r\n" + 
+			          		"join tblgiave gv on cb.MaChuyenBay = gv.IdChuyenBay\r\n" + 
+			          		"where cb.MaChuyenBay = '" + cbb_MaChuyenBay.getSelectedItem().toString() +"'\r\n"+
+			          		"and gv.HangVe = '" +  cbb_HangVe.getSelectedItem().toString() +"'";
+			          Statement st= conn.createStatement();
+			          ResultSet rs= st.executeQuery(qry);	
+			          while(rs.next())
+			          {
+			        	  String giave  = rs.getString("GiaTIen");
+			        	  txt_GiaTien.setText(giave);
+			          }     
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}	
+			}
+		});
+		cbb_HangVe.setBounds(130, 170, 260, 20);
 		contentPane.add(cbb_HangVe);
 		
 		cbb_MaChuyenBay = new JComboBox();
 		cbb_MaChuyenBay.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
+				if(cbb_MaChuyenBay.getSelectedItem().toString() != null)
+				{
 				LoadDataComboboxHV(cbb_MaChuyenBay.getSelectedItem().toString());
-			}
-		});
-		cbb_MaChuyenBay.setBounds(130, 63, 259, 20);
-		contentPane.add(cbb_MaChuyenBay);
-		
-		JButton btnAdd = new JButton("Thêm mới");
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int idSBDi = ((ComboboxItem)cbb_MaChuyenBay.getSelectedItem()).HiddenValue();
-				int idSBDen = ((ComboboxItem)comboBox.getSelectedItem()).HiddenValue();
-				int hangve =  ((ComboboxItem)cbb_HangVe.getSelectedItem()).HiddenValue();
 				try {
 			          Connection conn= (Connection) JDBC.getJDBCConnection();
-			          String qry="select count(*) as total \r\n" + 
-			          		"from chuyenbay cb join giave gv on cb.idchuyenbay = gv.idchuyenbay join hangve hv on gv.hangve = hv.id\r\n" + 
-			          		"where cb.idsanbaydi = " + idSBDi + " and cb.idsanbayden = " + idSBDen +" and hv.id = " + hangve;
+			          // prepare 
+			          String qry="select tbl1.TenSanBay as 'SanBayDi',tbl2.TenSanBay as 'SanBayDen' \r\n" + 
+			          		"from tblchuyenbay cb \r\n" + 
+			          		"join tblsanbay tbl1 ON cb.MaSanBayDi = tbl1.IdSanBay\r\n" + 
+			          		"join tblsanbay tbl2 ON cb.MaSanBayDen = tbl2.IdSanBay\r\n" + 
+			          		"where cb.MaChuyenBay = '" +  cbb_MaChuyenBay.getSelectedItem().toString() +"'";
 			          Statement st= conn.createStatement();
-			          ResultSet rs= st.executeQuery(qry);
-			          rs.next();
-			          if(rs.getInt("total") > 0) {
-			        	  JOptionPane.showMessageDialog(null, "Giá vé đã tồn tại. Vui lòng chỉnh sửa!");
-			        	  return;
-			          } if(txt_GiaTien.getText().isEmpty()) {
-			        	  JOptionPane.showMessageDialog(null, "Vui lòng nhập giá tiền!");
-							return;
-			          } else {
-			        	  
-			        	  String qry1="select cb.idchuyenbay as result \r\n" + 
-					          		"from chuyenbay cb where cb.idsanbaydi = " + idSBDi + " and cb.idsanbayden = " + idSBDen;
-				          ResultSet rs1= st.executeQuery(qry1);
-			        	  SessionFactory factory = new Configuration()
-									.configure("hibernate.cfg.xml")
-									.addAnnotatedClass(GiaVeEntity.class)
-									.buildSessionFactory();
-							Session session = factory.getCurrentSession();
-							
-							try {
-								while(rs1.next())
-								{
-									GiaVeEntity dc = new GiaVeEntity();
-									int idchuyenbay1 = rs1.getInt("result");
-									dc.setIdChuyenBay(idchuyenbay1);
-									dc.setHangVe(hangve);
-									dc.setGiaTien(Integer.parseInt(txt_GiaTien.getText()));
-									session.beginTransaction();
-									session.save(dc);		
-									session.getTransaction().commit();			
-									JOptionPane.showMessageDialog(null, "Thêm giá vé thành công !");
-									LoadDataHangVe();
-									break;
-								}
-								
-							}
-							finally {
-								factory.close();
-							}
-			          }
+			          ResultSet rs= st.executeQuery(qry);	
+			          while(rs.next())
+			          {
+			        	  String sbDi  = rs.getString("SanBayDi");
+			        	  String sbDen = rs.getString("SanBayDen");
+			        	  txtSBDi.setText(sbDi);
+			        	  txtSBDen.setText(sbDen);
+			        	  txtSBDi.setEditable(false);
+			        	  txtSBDen.setEditable(false);
+			          }     
+					}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}	
+					}
 				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}	
-			}
 		});
-		btnAdd.setBounds(30, 208, 106, 23);
-		contentPane.add(btnAdd);
+		cbb_MaChuyenBay.setBounds(130, 65, 260, 20);
+		contentPane.add(cbb_MaChuyenBay);
 		
 		JButton btnUpdate = new JButton("Cập nhật");
-		btnUpdate.setBounds(165, 208, 106, 23);
-		contentPane.add(btnUpdate);
-		
-		JButton btnDelete = new JButton("Xóa");
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int idSBDi = ((ComboboxItem)cbb_MaChuyenBay.getSelectedItem()).HiddenValue();
-				int idSBDen = ((ComboboxItem)comboBox.getSelectedItem()).HiddenValue();
-				int hangve =  ((ComboboxItem)cbb_HangVe.getSelectedItem()).HiddenValue();
-				SessionFactory factory = new Configuration()
-						.configure("hibernate.cfg.xml")
-						.addAnnotatedClass(GiaVeEntity.class)
-						.buildSessionFactory();
-				Session session = factory.getCurrentSession();
-				
-				String qry1="select cb.idchuyenbay as result \r\n" + 
-		          		"from chuyenbay cb where cb.idsanbaydi = " + idSBDi + " and cb.idsanbayden = " + idSBDen;
-				
-				try {
-					Connection conn= (Connection) JDBC.getJDBCConnection();
-					Statement st1;
-					try {
-						st1 = conn.createStatement();
-						ResultSet rs1= st1.executeQuery(qry1);
-						while(rs1.next())
-						{
-							GiaVeEntity dc = new GiaVeEntity();
-							int idchuyenbay1 = rs1.getInt("result");
-							dc.setIdChuyenBay(idchuyenbay1);
-							dc.setHangVe(hangve);
-							session.beginTransaction();
-							session.delete(dc);		
-							session.getTransaction().commit();			
-							JOptionPane.showMessageDialog(null, "Đã xóa giá vé thành công !");
-							LoadDataHangVe();
-							break;
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					
-					
-				}
-				finally {
-					LoadDataHangVe();
-					factory.close();
-				}
-			}
-		});
-		btnDelete.setBounds(307, 208, 106, 23);
-		contentPane.add(btnDelete);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.addMouseListener(new MouseAdapter() {
+		btnUpdate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				try {
-					 int index = table.getSelectedRow();
-				     DefaultTableModel dtm = (DefaultTableModel)table.getModel(); 
-//				     txtMaSB.setText(dtm.getValueAt(index, 1).toString());
-//					 txtTenSB.setText(dtm.getValueAt(index, 2).toString());
-					 txt_GiaTien.setText(dtm.getValueAt(index, 3).toString());  					 
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				UpdateGiaVe();
 			}
 		});
-		scrollPane_1.setBounds(434, 113, 439, 170);
+		btnUpdate.setBounds(170, 240, 106, 40);
+		contentPane.add(btnUpdate);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(439, 113, 436, 170);
 		contentPane.add(scrollPane_1);
 		
 		table = new JTable();
 		scrollPane_1.setViewportView(table);
 		
 		JLabel label = new JLabel("Tìm Kiếm");
-		label.setBounds(439, 70, 85, 20);
+		label.setBounds(440, 70, 85, 20);
 		contentPane.add(label);
 		
 		textField = new JTextField();
@@ -387,7 +335,7 @@ public class Gia extends JFrame implements Serializable {
 			}
 		});
 		textField.setColumns(10);
-		textField.setBounds(533, 70, 340, 20);
+		textField.setBounds(505, 70, 370, 20);
 		contentPane.add(textField);
 		
 		Panel panel_1 = new Panel();
@@ -398,16 +346,26 @@ public class Gia extends JFrame implements Serializable {
 		lblDanhSchSn.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel_1.add(lblDanhSchSn);
 		
-		comboBox = new JComboBox();
-		comboBox.setBounds(130, 94, 259, 20);
-		contentPane.add(comboBox);
-		
 		JLabel lblChuynBayn = new JLabel("Sân bay đến");
-		lblChuynBayn.setBounds(30, 94, 90, 14);
+		lblChuynBayn.setBounds(30, 130, 90, 15);
 		contentPane.add(lblChuynBayn);
 		
 		JLabel lblVn = new JLabel("VNĐ");
-		lblVn.setBounds(351, 166, 37, 14);
+		lblVn.setBounds(355, 215, 35, 15);
 		contentPane.add(lblVn);
+		
+		txtSBDi = new JTextField();
+		txtSBDi.setColumns(10);
+		txtSBDi.setBounds(130, 95, 260, 20);
+		contentPane.add(txtSBDi);
+		
+		txtSBDen = new JTextField();
+		txtSBDen.setColumns(10);
+		txtSBDen.setBounds(130, 130, 260, 20);
+		contentPane.add(txtSBDen);
+		
+		JLabel lblMChuynBay = new JLabel("Mã chuyến bay");
+		lblMChuynBay.setBounds(30, 65, 90, 15);
+		contentPane.add(lblMChuynBay);
 	}
 }
