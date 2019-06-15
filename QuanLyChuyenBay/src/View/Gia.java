@@ -160,7 +160,6 @@ public class Gia extends JFrame implements Serializable {
 	
 	public void UpdateGiaVe() {
 
-		
 		if (txt_GiaTien.getText().isEmpty())
 		{
 			JOptionPane.showMessageDialog(null, "Vui lòng nhập giá tiền");

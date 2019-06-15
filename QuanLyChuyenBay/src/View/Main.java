@@ -218,16 +218,6 @@ public class Main {
 		menuQuanLy.add(itemQLDatCho);
 		
 		JMenuItem itemVeChuyenBay = new JMenuItem("Vé chuyến bay");
-		itemVeChuyenBay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				VeChuyenBay vcb = new VeChuyenBay();
-				tabbedPane.addTab("Vé chuyến bay", vcb.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
-			}
-		});
 		menuQuanLy.add(itemVeChuyenBay);
 		
 		JMenu menuBaoCao = new JMenu("Báo cáo");

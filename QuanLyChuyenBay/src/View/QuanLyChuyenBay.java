@@ -67,6 +67,11 @@ public class QuanLyChuyenBay extends JFrame {
 	private JSpinner spi_SoLuongGhe1;
 	private JSpinner spi_SoLuongGhe2;
 	
+	private int qd_thoigianbay;
+	private int qd_sosanbaytg;
+	private int qd_DungToiThieu;
+	private int qd_DungToiDa;
+	
     public void LoadDataCombobox() {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
@@ -135,6 +140,26 @@ public class QuanLyChuyenBay extends JFrame {
 		}	
     }
     
+    public void LoadDataQuyDinh() {
+  	  // prepare table view
+  	try {
+  		  Connection conn= (Connection) JDBC.getJDBCConnection();
+		  String qry="select * from tblquydinh";
+		  Statement st= conn.createStatement();
+		  ResultSet rs= st.executeQuery(qry);
+		  while(rs.next()) {
+			  	qd_thoigianbay = Integer.parseInt(rs.getString("TgBayToiThieu"));
+			  	qd_sosanbaytg = Integer.parseInt(rs.getString("SanBayTrungGianToiDa"));
+			  	qd_DungToiThieu = Integer.parseInt(rs.getString("ThoiGianDungToiThieu"));
+				qd_DungToiDa = Integer.parseInt(rs.getString("ThoiGianDungToiDa"));
+		  }  
+  	}
+  	catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+  }
+    
     public void ResetField() {
     	try {
     		 txtMaTuyenBay.setText("");
@@ -157,6 +182,7 @@ public class QuanLyChuyenBay extends JFrame {
     	GenerateTableColumn();
     	LoadDataCombobox();
     	LoadDataChuyenBay();
+    	LoadDataQuyDinh();
     }
     
     public int FindInDexInCombobox(JComboBox cbbtemp,int element) {
@@ -261,6 +287,14 @@ public class QuanLyChuyenBay extends JFrame {
 					JOptionPane.showMessageDialog(null, "Sân bay đến không thể trùng sân bay đi");
 					return;
 				}
+				
+				int tonggiobay = (int)spi_GioBay.getValue() * 60 + (int)spi_PhutBay.getValue();
+				if( tonggiobay < qd_thoigianbay) 
+				{
+					JOptionPane.showMessageDialog(null, "Thời gian bay không thể thấp hơn mức tối thiểu");
+					return;
+				}
+				
 				else
 				{
 					SessionFactory factory = new Configuration()
@@ -368,6 +402,15 @@ public class QuanLyChuyenBay extends JFrame {
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày của chuyến bay");
 					return;
 				}
+				
+				int tonggiobay = (int)spi_GioBay.getValue() * 60 + (int)spi_PhutBay.getValue();
+				if( tonggiobay < qd_thoigianbay) 
+				{
+					JOptionPane.showMessageDialog(null, "Thời gian bay không thể thấp hơn mức tối thiểu");
+					return;
+				}
+				
+				
 				else
 				{
 				     SessionFactory factory = new Configuration()
@@ -562,6 +605,17 @@ public class QuanLyChuyenBay extends JFrame {
 		btn_ThemSanBayTG.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
+				if(tbl_SanbayTrungGian.getModel().getRowCount() >= qd_sosanbaytg)
+				{
+					JOptionPane.showMessageDialog(null, "Đã đạt số lượng sân bay trung gian tối đa");
+					return;
+				}
+				if( qd_DungToiDa < (int)spi_ThoiGianDung.getValue() || (int)spi_ThoiGianDung.getValue() < qd_DungToiThieu )
+				{
+					JOptionPane.showMessageDialog(null, "Thời gian dừng không hợp lệ");
+					return;
+				}
 				if(cbb_SanBayTrungGian.getSelectedIndex() == cbb_SanBayDi.getSelectedIndex() || cbb_SanBayTrungGian.getSelectedIndex() == cbb_SanBayDen.getSelectedIndex())
 				{
 					JOptionPane.showMessageDialog(null, "Sân bay trung gian trùng với sân bay đến hoặc sân bay đi !");
