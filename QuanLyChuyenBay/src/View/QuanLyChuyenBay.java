@@ -37,6 +37,7 @@ import com.toedter.calendar.JDateChooser;
 
 import ComboboxItem.ComboboxItem;
 import Entity.ChuyenBayEntity;
+import Entity.HangVeBoSungEntity;
 import Entity.SanBayTrungGianEntity;
 import JDBC.JDBC;
 import net.proteanit.sql.DbUtils;
@@ -138,6 +139,72 @@ public class QuanLyChuyenBay extends JFrame {
 		{
 			e.printStackTrace();
 		}	
+    }
+    
+    public void ThemChuyenBayTrungGian() {
+    	SessionFactory factory2 = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(SanBayTrungGianEntity.class)
+				.buildSessionFactory();
+		Session session2 = factory2.getCurrentSession();
+		try {
+			//set data
+			session2.beginTransaction();
+			
+			for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
+			{
+				SanBayTrungGianEntity sbtg = new SanBayTrungGianEntity();
+				
+				sbtg.setMaChuyenBay(txtMaTuyenBay.getText());
+				int maSanBayTG = ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue();
+				sbtg.setMaSanBay(maSanBayTG);
+				sbtg.setThoiGianDung((int)tbl_SanbayTrungGian.getValueAt(row, 1));
+				
+				session2.save(sbtg);
+				session2.flush();
+			    session2.clear();
+			}
+			
+			session2.getTransaction().commit();
+			//JOptionPane.showMessageDialog(null, "Đã cập nhật san bay trung gian !");
+			tbl_SanbayTrungGian.setModel(new DefaultTableModel());
+		}
+		finally {
+			factory2.close();
+		}
+    }
+    
+    public void ThemHangVeBoSung() {
+    	SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(HangVeBoSungEntity.class)
+				.buildSessionFactory();
+		Session session = factory.getCurrentSession();
+		try {
+			//set data
+			session.beginTransaction();
+			
+			for(int row = 0; row < tbl_HangVe.getModel().getRowCount(); row++)
+			{
+				HangVeBoSungEntity hvbs = new HangVeBoSungEntity();
+				
+				hvbs.setMaChuyenBay(txtMaTuyenBay.getText());
+				int sttHangVe = (int)tbl_HangVe.getValueAt(row, 0);
+				hvbs.setSttHangVe(sttHangVe);
+				hvbs.setSoLuongGhe((int)tbl_HangVe.getValueAt(row, 1));
+				
+				session.save(hvbs);
+				session.flush();
+			    session.clear();
+			}
+			
+			session.getTransaction().commit();
+			JOptionPane.showMessageDialog(null, "Đã cập nhật hang ve bo sung !");
+			tbl_HangVe.setModel(new DefaultTableModel());
+		}
+		finally {
+			factory.close();
+		}
     }
     
     public void LoadDataQuyDinh() {
@@ -334,37 +401,13 @@ public class QuanLyChuyenBay extends JFrame {
 						// them chuyen bay trung gian
 						if(tbl_SanbayTrungGian.getModel().getRowCount() > 0)
 						{
-							SessionFactory factory2 = new Configuration()
-									.configure("hibernate.cfg.xml")
-									.addAnnotatedClass(SanBayTrungGianEntity.class)
-									.buildSessionFactory();
-							Session session2 = factory2.getCurrentSession();
-							try {
-								//set data
-								session2.beginTransaction();
-								
-								for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
-								{
-									SanBayTrungGianEntity sbtg = new SanBayTrungGianEntity();
-									
-									sbtg.setMaChuyenBay(txtMaTuyenBay.getText());
-									int maSanBayTG = ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue();
-									sbtg.setMaSanBay(maSanBayTG);
-									sbtg.setThoiGianDung((int)tbl_SanbayTrungGian.getValueAt(row, 1));
-									
-									session2.save(sbtg);
-									session2.flush();
-								    session2.clear();
-								}
-								
-								session2.getTransaction().commit();
-								//JOptionPane.showMessageDialog(null, "Đã cập nhật san bay trung gian !");
-								tbl_SanbayTrungGian.setModel(new DefaultTableModel());
-								GenerateTableColumn();
-							}
-							finally {
-								factory2.close();
-							}
+							ThemChuyenBayTrungGian();
+						}
+						
+						// them hang ve bo sung
+						if(tbl_HangVe.getModel().getRowCount() > 0)
+						{
+							ThemHangVeBoSung();
 						}
 						
 						// reset data after insert
@@ -409,7 +452,6 @@ public class QuanLyChuyenBay extends JFrame {
 					JOptionPane.showMessageDialog(null, "Thời gian bay không thể thấp hơn mức tối thiểu");
 					return;
 				}
-				
 				
 				else
 				{
@@ -463,41 +505,18 @@ public class QuanLyChuyenBay extends JFrame {
 			     		// them chuyen bay trung gian
 						if(tbl_SanbayTrungGian.getModel().getRowCount() > 0)
 						{
-							SessionFactory factory2 = new Configuration()
-									.configure("hibernate.cfg.xml")
-									.addAnnotatedClass(SanBayTrungGianEntity.class)
-									.buildSessionFactory();
-							Session session2 = factory2.getCurrentSession();
-							try {
-								//set data
-								session2.beginTransaction();
-								
-								for(int row = 0; row < tbl_SanbayTrungGian.getModel().getRowCount(); row++)
-								{
-									SanBayTrungGianEntity sbtg = new SanBayTrungGianEntity();
-									
-									sbtg.setMaChuyenBay(txtMaTuyenBay.getText());
-									int maSanBayTG = ((ComboboxItem)tbl_SanbayTrungGian.getValueAt(row, 0)).HiddenValue();
-									sbtg.setMaSanBay(maSanBayTG);
-									sbtg.setThoiGianDung((int)tbl_SanbayTrungGian.getValueAt(row, 1));
-									
-									session2.save(sbtg);
-									session2.flush();
-								    session2.clear();
-								}
-								
-								session2.getTransaction().commit();
-								//JOptionPane.showMessageDialog(null, "Đã cập nhật san bay trung gian !");
-								tbl_SanbayTrungGian.setModel(new DefaultTableModel());
-								GenerateTableColumn();
-							}
-							finally {
-								factory2.close();
-							}
+							ThemChuyenBayTrungGian();
 						}
 			     		
+						// them hang ve bo sung
+						if(tbl_HangVe.getModel().getRowCount() > 0)
+						{
+							ThemHangVeBoSung();
+						}
+										
 						JOptionPane.showMessageDialog(null, "Đã cập nhật chuyến bay thành công !");
 						LoadDataChuyenBay();
+						GenerateTableColumn();
 						ResetField();
 					}
 					finally {
@@ -831,7 +850,7 @@ public class QuanLyChuyenBay extends JFrame {
 		contentPane.add(lblSttHngV);
 		
 		spi_HangVeMoi = new JSpinner();
-		spi_HangVeMoi.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spi_HangVeMoi.setModel(new SpinnerNumberModel(new Integer(3), new Integer(3), null, new Integer(1)));
 		spi_HangVeMoi.setBounds(190, 310, 215, 20);
 		contentPane.add(spi_HangVeMoi);
 		
