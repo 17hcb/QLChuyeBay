@@ -19,7 +19,6 @@ public class HangVeBoSungEntity implements Serializable{
 	private static final long serialVersionUID = 3107980199968382447L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="IdHangVeBoSung")
 	private String idHangVeBoSung;	
 	
