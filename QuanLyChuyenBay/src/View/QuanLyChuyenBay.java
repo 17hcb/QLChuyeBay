@@ -37,6 +37,7 @@ import com.toedter.calendar.JDateChooser;
 
 import ComboboxItem.ComboboxItem;
 import Entity.ChuyenBayEntity;
+import Entity.GiaVeEntity;
 import Entity.HangVeBoSungEntity;
 import Entity.SanBayTrungGianEntity;
 import JDBC.JDBC;
@@ -115,7 +116,7 @@ public class QuanLyChuyenBay extends JFrame {
     public void LoadDataSanBayTrungGian(String machuyenbay) {
     	  // prepare table view
     	 tbl_SanbayTrungGian.setModel(new DefaultTableModel());
-	     GenerateTableColumn();
+    	 GenerateTableColumnSB();
     	try {
             Connection conn= (Connection) JDBC.getJDBCConnection();
             String qry = "SELECT t2.IdSanBay, t2.TenSanBay, t1.ThoiGianDung FROM tblsanbaytrunggian t1 JOIN tblsanbay t2 ON t1.MaSanBay = t2.IdSanBay WHERE t1.MaChuyenBay = '" +machuyenbay+"'";
@@ -136,6 +137,34 @@ public class QuanLyChuyenBay extends JFrame {
             tbl_SanbayTrungGian.setModel(model);
     	}
     	catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+    }
+    
+    public void LoadDataHangVeBoSung(String machuyenbay) {
+    	// prepare table view
+	   	tbl_HangVe.setModel(new DefaultTableModel());
+	   	GenerateTableColumnHV();
+	   	try {
+	           Connection conn= (Connection) JDBC.getJDBCConnection();
+	           String qry = "SELECT bs.STTHangVe,bs.SoLuongGhe FROM tblhangvebosung bs where MaChuyenBay = '" +machuyenbay+"'";
+	           Statement st = conn.createStatement();
+	           ResultSet rs = st.executeQuery(qry);
+		  
+	           DefaultTableModel model = (DefaultTableModel) tbl_HangVe.getModel();
+	           while(rs.next())
+	           {
+	           	Object [] row = new Object[2];
+	           	
+	   			row[0] = rs.getInt("STTHangVe");
+	   			row[1] = rs.getInt("SoLuongGhe");
+	   			
+	   			model.addRow(row);
+	           }
+	           tbl_HangVe.setModel(model);
+	   	}
+	   	catch (Exception e)
 		{
 			e.printStackTrace();
 		}	
@@ -199,12 +228,105 @@ public class QuanLyChuyenBay extends JFrame {
 			}
 			
 			session.getTransaction().commit();
-			JOptionPane.showMessageDialog(null, "Đã cập nhật hang ve bo sung !");
+			//JOptionPane.showMessageDialog(null, "Đã cập nhật hang ve bo sung !");
 			tbl_HangVe.setModel(new DefaultTableModel());
 		}
 		finally {
 			factory.close();
 		}
+    }
+    
+    public void ThemGiaVe() {
+    	SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(GiaVeEntity.class)
+				.buildSessionFactory();
+		Session session = factory.getCurrentSession();
+		try {
+			//set data
+			int sttHangVe = 1;
+			session.beginTransaction();
+			
+			for(int row = 0; row < 2; row++)
+			{
+				GiaVeEntity gv = new GiaVeEntity();
+				
+				gv.setIdChuyenBay(txtMaTuyenBay.getText());
+				gv.setHangVe(sttHangVe);
+				gv.setGiaTien(0);
+				sttHangVe++;
+				
+				session.save(gv);
+				session.flush();
+			    session.clear();
+			}
+			
+			if(tbl_HangVe.getModel().getRowCount() > 0)
+			{
+				for(int row = 0; row < tbl_HangVe.getModel().getRowCount(); row++)
+				{
+					GiaVeEntity gv = new GiaVeEntity();
+					
+					gv.setIdChuyenBay(txtMaTuyenBay.getText());
+					sttHangVe = (int)tbl_HangVe.getValueAt(row, 0);
+					gv.setHangVe(sttHangVe);
+					gv.setGiaTien(0);
+					
+					session.save(gv);
+					session.flush();
+				    session.clear();
+				}
+			}
+			
+			session.getTransaction().commit();
+			//JOptionPane.showMessageDialog(null, "Đã cập nhật giá vé !");
+			tbl_HangVe.setModel(new DefaultTableModel());
+		}
+		finally {
+			factory.close();
+		}
+    }
+    
+    public void XoaChuyenBayTrungGian() {
+    	try {
+	     	Connection newconn= (Connection) JDBC.getJDBCConnection();
+            String qrydel = "Delete from tblsanbaytrunggian where MaChuyenBay = '" + txtMaTuyenBay.getText() + "'";
+            Statement stdel = newconn.createStatement();
+            stdel.executeUpdate(qrydel);
+ 			}
+ 		catch (Exception ex)
+ 			{
+ 				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
+ 				ex.printStackTrace();
+ 			}	
+    }
+    
+    public void XoaHangVeBoSung() {
+    	try {
+	     	Connection newconn= (Connection) JDBC.getJDBCConnection();
+            String qrydel = "Delete from tblhangvebosung where MaChuyenBay = '" + txtMaTuyenBay.getText() + "'";
+            Statement stdel = newconn.createStatement();
+            stdel.executeUpdate(qrydel);
+ 			}
+ 		catch (Exception ex)
+ 			{
+ 				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
+ 				ex.printStackTrace();
+ 			}	
+    }
+    
+    public void XoaGiaVe() {
+    	try {
+	     	Connection newconn= (Connection) JDBC.getJDBCConnection();
+            String qrydel = "Delete from tblgiave where IdChuyenBay = '" + txtMaTuyenBay.getText() + "'";
+            Statement stdel = newconn.createStatement();
+            stdel.executeUpdate(qrydel);
+ 			}
+ 		catch (Exception ex)
+ 			{
+ 				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
+ 				ex.printStackTrace();
+ 			}	
     }
     
     public void LoadDataQuyDinh() {
@@ -265,18 +387,25 @@ public class QuanLyChuyenBay extends JFrame {
     	return 0;
     }
     
-    public void GenerateTableColumn() {
+    public void GenerateTableColumnSB() {
     	// Khoi tao column cho table san bay trung gian
     	Object [] columnheader = {"Sân bay trung gian","Thời gian dừng"};
     	DefaultTableModel modelcolumn = new DefaultTableModel();
     	modelcolumn.setColumnIdentifiers(columnheader);
 		tbl_SanbayTrungGian.setModel(modelcolumn);
-		
-		// Khoi tao column cho table hang ve
-		Object [] columnheaderHangve = {"STT hạng vé","Số lượng ghế"};
-		DefaultTableModel modelcolumnHangve = new DefaultTableModel();
-		modelcolumnHangve.setColumnIdentifiers(columnheaderHangve);
-		tbl_HangVe.setModel(modelcolumnHangve);
+    }
+    
+    public void GenerateTableColumnHV() {
+    	// Khoi tao column cho table hang ve
+    	Object [] columnheaderHangve = {"STT hạng vé","Số lượng ghế"};
+    	DefaultTableModel modelcolumnHangve = new DefaultTableModel();
+    	modelcolumnHangve.setColumnIdentifiers(columnheaderHangve);
+    	tbl_HangVe.setModel(modelcolumnHangve);
+    }
+    
+    public void GenerateTableColumn() {
+    	GenerateTableColumnSB();
+    	GenerateTableColumnHV();
     }
     
 	/**
@@ -410,6 +539,8 @@ public class QuanLyChuyenBay extends JFrame {
 							ThemHangVeBoSung();
 						}
 						
+						ThemGiaVe();
+						
 						// reset data after insert
 						JOptionPane.showMessageDialog(null, "Đã thêm chuyến bay thành công !");
 						LoadDataChuyenBay();
@@ -490,17 +621,13 @@ public class QuanLyChuyenBay extends JFrame {
 						session.getTransaction().commit();
 						
 						// xoa chuyen bay trung gian
-			     		try {
-					     	Connection newconn= (Connection) JDBC.getJDBCConnection();
-				            String qrydel = "Delete from tblsanbaytrunggian where MaChuyenBay = '" + txtMaTuyenBay.getText() + "'";
-				            Statement stdel = newconn.createStatement();
-				            stdel.executeUpdate(qrydel);
-			     			}
-			     		catch (Exception ex)
-			     			{
-			     				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
-			     				ex.printStackTrace();
-			     			}	
+						XoaChuyenBayTrungGian();
+						
+						// xoa hang ve bo sung
+						XoaHangVeBoSung();
+						
+						// xoa gia ve cu 
+						XoaGiaVe();
 						
 			     		// them chuyen bay trung gian
 						if(tbl_SanbayTrungGian.getModel().getRowCount() > 0)
@@ -513,6 +640,8 @@ public class QuanLyChuyenBay extends JFrame {
 						{
 							ThemHangVeBoSung();
 						}
+						
+						ThemGiaVe();
 										
 						JOptionPane.showMessageDialog(null, "Đã cập nhật chuyến bay thành công !");
 						LoadDataChuyenBay();
@@ -561,21 +690,11 @@ public class QuanLyChuyenBay extends JFrame {
 						session.getTransaction().commit();
 						
 						// xoa chuyen bay trung gian
-				     		try {
-						     	Connection newconn= (Connection) JDBC.getJDBCConnection();
-					            String qrydel = "Delete from tblsanbaytrunggian where MaChuyenBay = '" + idChuyenBay + "'";
-					            Statement stdel = newconn.createStatement();
-					            stdel.executeUpdate(qrydel);
-					            //JOptionPane.showMessageDialog(null, "Xóa sân bay trung gian thành công !");
-					            tbl_SanbayTrungGian.setModel(new DefaultTableModel());
-								GenerateTableColumn();
-				     			}
-				     		catch (Exception e)
-				     			{
-				     				JOptionPane.showMessageDialog(null, "Lỗi xử lý SQL !");
-				     				e.printStackTrace();
-				     			}	
+						XoaChuyenBayTrungGian();
 				     
+						// xoa hang ve bo sung
+						XoaHangVeBoSung();
+						
 						JOptionPane.showMessageDialog(null, "Đã xóa chuyến bay thành công !");
 						LoadDataChuyenBay();
 				        ResetField();
@@ -719,6 +838,7 @@ public class QuanLyChuyenBay extends JFrame {
 					 dc_NgayBay.setDate(dateload);
 					 
 					 LoadDataSanBayTrungGian(dtm.getValueAt(index, 0).toString());	 
+					 LoadDataHangVeBoSung(dtm.getValueAt(index, 0).toString());
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();

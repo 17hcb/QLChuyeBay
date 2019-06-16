@@ -130,9 +130,9 @@ public class DanhSachChuyenBay extends JFrame {
 			    if(SoGheConTrong > 0)
 			    {
 			    	JOptionPane.showMessageDialog(null, "Mời đặt chỗ - Số ghế còn trống " + SoGheConTrong);
-			    	DatCho newframe = new DatCho();
-			    	newframe.main(null, dtm.getValueAt(index, 0).toString());
-			    	newframe.setVisible(true);
+			    	//DatCho newframe = new DatCho();
+			    	DatCho.main(null, dtm.getValueAt(index, 0).toString());
+			    	//newframe.setVisible(true);
 					return;
 			    }
 			    else
@@ -142,7 +142,7 @@ public class DanhSachChuyenBay extends JFrame {
 			    }
 			}
 		});
-		btnDatVe.setBounds(330, 390, 120, 60);
+		btnDatVe.setBounds(375, 390, 120, 60);
 		contentPane.add(btnDatVe);
 		
 		txtTimKiem = new JTextField();
@@ -177,5 +177,61 @@ public class DanhSachChuyenBay extends JFrame {
 		
 		tbl_ChuyenBay = new JTable();
 		scrollPane.setViewportView(tbl_ChuyenBay);
+		
+		JButton btnHytV = new JButton("Hủy đặt vé");
+		btnHytV.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (tbl_ChuyenBay.getSelectionModel().isSelectionEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn chuyến bay để hủy đặt vé");
+					return;
+				}
+				
+				int index = tbl_ChuyenBay.getSelectedRow();
+			    DefaultTableModel dtm = (DefaultTableModel)tbl_ChuyenBay.getModel(); 
+
+			    //HuyDatCho newframe = new HuyDatCho();
+			    HuyDatCho.main(null, dtm.getValueAt(index, 0).toString());
+			    //newframe.setVisible(true);
+				return;
+			}
+		});
+		btnHytV.setBounds(520, 390, 120, 60);
+		contentPane.add(btnHytV);
+		
+		JButton btnBnV = new JButton("Bán vé");
+		btnBnV.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (tbl_ChuyenBay.getSelectionModel().isSelectionEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn chuyến bay để bán vé");
+					return;
+				}
+				
+				int index = tbl_ChuyenBay.getSelectedRow();
+			    DefaultTableModel dtm = (DefaultTableModel)tbl_ChuyenBay.getModel(); 
+			    int SoLuongGhe = Integer.parseInt(dtm.getValueAt(index, 6).toString());
+			    int SoLuongGheDaDat =Integer.parseInt(dtm.getValueAt(index, 7).toString());
+			    int SoGheConTrong = SoLuongGhe - SoLuongGheDaDat;
+			    
+			    if(SoGheConTrong > 0)
+			    {
+			    	JOptionPane.showMessageDialog(null, "Mời đặt chỗ - Số ghế còn trống " + SoGheConTrong);
+			    	//BanVe newframe = new BanVe();
+			    	BanVe.main(null, dtm.getValueAt(index, 0).toString());
+			    	//newframe.setVisible(true);
+					return;
+			    }
+			    else
+			    {
+			    	JOptionPane.showMessageDialog(null, "Đã hết ghế");
+					return;
+			    }
+			}
+		});
+		btnBnV.setBounds(230, 390, 120, 60);
+		contentPane.add(btnBnV);
 	}
 }

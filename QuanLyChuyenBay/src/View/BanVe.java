@@ -40,9 +40,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 
-public class DatCho extends JFrame {
+public class BanVe extends JFrame {
 	
 	private static final long serialVersionUID = 6747369890957991308L;
 	private JPanel contentPane;
@@ -63,9 +65,9 @@ public class DatCho extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DatCho frame = new DatCho();
+					BanVe frame = new BanVe();
 					frame.GetData(data);
-					frame.LoadData();	
+					frame.LoadData();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -80,7 +82,7 @@ public class DatCho extends JFrame {
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				try {
-//					DatCho frame = new DatCho();
+//					BanVe frame = new BanVe();
 //					frame.LoadData();
 //					frame.setVisible(true);
 //				} catch (Exception e) {
@@ -166,31 +168,31 @@ public class DatCho extends JFrame {
 		try {
           Connection conn= (Connection) JDBC.getJDBCConnection();
           String qry="SELECT \r\n" + 
-            		"		cb.SoLuongGheHang1 - (select SUM(soluong) FROM tblvedatcho dc WHERE dc.HangVe = 1 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 1', \r\n" + 
-              		"		cb.SoLuongGheHang2 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 2 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 2', \r\n" + 
-              		"		HBS.SoLuongGheHang3 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 3 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 3',\r\n" + 
-              		"        HBS.SoLuongGheHang4 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 4 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 4',\r\n" + 
-              		"        HBS.SoLuongGheHang5 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 5 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 5',\r\n" + 
-              		"        HBS.SoLuongGheHang6 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 6 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 6', \r\n" + 
-              		"        HBS.SoLuongGheHang7 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 7 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 7',\r\n" + 
-              		"        HBS.SoLuongGheHang8 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 8 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 8',\r\n" + 
-              		"        HBS.SoLuongGheHang9 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 9 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 9',\r\n" + 
-              		"        HBS.SoLuongGheHang10 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 10 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 10'\r\n" + 
-              		"FROM tblchuyenbay cb\r\n" + 
-              		"LEFT JOIN (\r\n" + 
-              		"	SELECT hvbs.MaChuyenBay,\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 3 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang3',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 4 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang4',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 5 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang5',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 6 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang6',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 7 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang7',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 8 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang8',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 9 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang9',\r\n" + 
-              		"         MAX(CASE WHEN hvbs.STTHangVe = 10 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang10'\r\n" + 
-              		"	FROM tblhangvebosung hvbs\r\n" + 
-              		") HBS on HBS.MaChuyenBay = cb.MaChuyenBay\r\n" + 
-              		"WHERE cb.MaChuyenBay = '" + cboMaChuyenBay.getSelectedItem().toString() + "'" +
-              		"GROUP BY cb.MaChuyenBay";
+          		"		cb.SoLuongGheHang1 - (select SUM(soluong) FROM tblvedatcho dc WHERE dc.HangVe = 1 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 1', \r\n" + 
+            	"		cb.SoLuongGheHang2 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 2 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 2', \r\n" + 
+            	"		HBS.SoLuongGheHang3 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 3 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 3',\r\n" + 
+            	"        HBS.SoLuongGheHang4 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 4 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 4',\r\n" + 
+            	"        HBS.SoLuongGheHang5 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 5 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 5',\r\n" + 
+            	"        HBS.SoLuongGheHang6 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 6 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 6', \r\n" + 
+            	"        HBS.SoLuongGheHang7 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 7 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 7',\r\n" + 
+            	"        HBS.SoLuongGheHang8 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 8 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 8',\r\n" + 
+            	"        HBS.SoLuongGheHang9 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 9 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 9',\r\n" + 
+            	"        HBS.SoLuongGheHang10 - (select COALESCE(SUM(soluong),0) FROM tblvedatcho dc WHERE dc.HangVe = 10 and dc.MaChuyenBay = cb.MaChuyenBay) as 'Ghe hang 10'\r\n" + 
+            	"FROM tblchuyenbay cb\r\n" + 
+          		"LEFT JOIN (\r\n" + 
+          		"	SELECT hvbs.MaChuyenBay,\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 3 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang3',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 4 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang4',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 5 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang5',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 6 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang6',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 7 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang7',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 8 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang8',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 9 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang9',\r\n" + 
+          		"         MAX(CASE WHEN hvbs.STTHangVe = 10 THEN hvbs.SoLuongGhe ELSE 0 END) as 'SoLuongGheHang10'\r\n" + 
+          		"	FROM tblhangvebosung hvbs\r\n" + 
+          		") HBS on HBS.MaChuyenBay = cb.MaChuyenBay\r\n" + 
+          		"WHERE cb.MaChuyenBay = '" + cboMaChuyenBay.getSelectedItem().toString() + "'" +
+          		"GROUP BY cb.MaChuyenBay";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
           
@@ -220,26 +222,21 @@ public class DatCho extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DatCho() {
+	public BanVe() {
 		setTitle("Thông tin đặt chỗ");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 869, 35);
-		contentPane.add(panel);
 		
 		JLabel lblThngTint = new JLabel("Thông tin đặt chỗ");
 		lblThngTint.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel.add(lblThngTint);
 		
 		JLabel lblNewLabel = new JLabel("Mã chuyến bay");
-		lblNewLabel.setBounds(50, 60, 90, 20);
-		contentPane.add(lblNewLabel);
 		
 		cboMaChuyenBay = new JComboBox();
 		cboMaChuyenBay.addItemListener(new ItemListener() {
@@ -251,33 +248,21 @@ public class DatCho extends JFrame {
 				}
 			}
 		});
-		cboMaChuyenBay.setBounds(150, 60, 200, 20);
-		contentPane.add(cboMaChuyenBay);
 		
 		txtCMND = new JTextField();
-		txtCMND.setBounds(150, 100, 200, 20);
-		contentPane.add(txtCMND);
 		txtCMND.setColumns(10);
 		
 		txtGiaVe = new JTextField();
 		txtGiaVe.setColumns(10);
-		txtGiaVe.setBounds(600, 140, 200, 20);
-		contentPane.add(txtGiaVe);
 		
 		JLabel lblCmnd = new JLabel("CMND");
-		lblCmnd.setBounds(50, 100, 80, 20);
-		contentPane.add(lblCmnd);
 		
 		JLabel lblinThoi = new JLabel("Điện thoại");
-		lblinThoi.setBounds(500, 100, 80, 20);
-		contentPane.add(lblinThoi);
 		
 		txtSoDienThoai = new JTextField();
 		txtSoDienThoai.setColumns(10);
-		txtSoDienThoai.setBounds(600, 100, 200, 20);
-		contentPane.add(txtSoDienThoai);
 		
-		JButton btnDatVe = new JButton("Đặt vé");
+		JButton btnDatVe = new JButton("Bán vé");
 		btnDatVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Save();				
@@ -292,6 +277,7 @@ public class DatCho extends JFrame {
 				Session session = factory.getCurrentSession();
 				try {
 					DatChoEntity dc = new DatChoEntity();
+					
 					DefaultTableModel dtm = (DefaultTableModel)tblDatCho.getModel(); 
 					int available = Integer.parseInt(dtm.getValueAt(0, cboHangVe.getSelectedIndex()).toString());
 					if((available - (int)spiSoLuong.getValue()) > 0)
@@ -323,12 +309,8 @@ public class DatCho extends JFrame {
 				}
 			}
 		});
-		btnDatVe.setBounds(400, 400, 100, 50);
-		contentPane.add(btnDatVe);
 		
 		JLabel lblKhchHng = new JLabel("Khách hàng");
-		lblKhchHng.setBounds(500, 60, 85, 20);
-		contentPane.add(lblKhchHng);
 		
 	    cboKhachHang = new JComboBox();
 	    cboKhachHang.addItemListener(new ItemListener() {
@@ -354,16 +336,10 @@ public class DatCho extends JFrame {
 	    		 }
 	    	}
 	    });
-		cboKhachHang.setBounds(600, 60, 200, 20);
-		contentPane.add(cboKhachHang);
 		
 		JLabel lblHngV = new JLabel("Hạng vé");
-		lblHngV.setBounds(50, 140, 80, 20);
-		contentPane.add(lblHngV);
 		
 		JLabel lblGiTin = new JLabel("Giá tiền");
-		lblGiTin.setBounds(500, 140, 80, 20);
-		contentPane.add(lblGiTin);
 		
 		cboHangVe = new JComboBox();
 		cboHangVe.addItemListener(new ItemListener() {
@@ -386,32 +362,108 @@ public class DatCho extends JFrame {
 				}
 			}
 		});
-		cboHangVe.setBounds(150, 140, 200, 20);
-		contentPane.add(cboHangVe);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(5, 220, 865, 165);
-		contentPane.add(scrollPane);
 		
 		tblDatCho = new JTable();
 		scrollPane.setViewportView(tblDatCho);
 		
 		spiSoLuong = new JSpinner();
 		spiSoLuong.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		spiSoLuong.setBounds(150, 180, 200, 20);
-		contentPane.add(spiSoLuong);
 		
 		txtGhiChu = new JTextField();
-		txtGhiChu.setBounds(600, 180, 200, 20);
-		contentPane.add(txtGhiChu);
 		txtGhiChu.setColumns(10);
 		
 		JLabel lblGhiCh = new JLabel("Ghi chú");
-		lblGhiCh.setBounds(500, 180, 80, 20);
-		contentPane.add(lblGhiCh);
 		
 		JLabel lblSLng = new JLabel("Số lượng");
-		lblSLng.setBounds(50, 180, 80, 20);
-		contentPane.add(lblSLng);
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
+					.addGap(5))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(45)
+					.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(cboMaChuyenBay, 0, 200, Short.MAX_VALUE)
+					.addGap(150)
+					.addComponent(lblKhchHng, GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+					.addGap(15)
+					.addComponent(cboKhachHang, 0, 200, Short.MAX_VALUE)
+					.addGap(79))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(45)
+					.addComponent(lblCmnd, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(txtCMND, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(150)
+					.addComponent(lblinThoi, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(txtSoDienThoai, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(79))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(45)
+					.addComponent(lblHngV, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(cboHangVe, 0, 200, Short.MAX_VALUE)
+					.addGap(150)
+					.addComponent(lblGiTin, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(txtGiaVe, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(79))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(45)
+					.addComponent(lblSLng, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(spiSoLuong, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(150)
+					.addComponent(lblGhiCh, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+					.addGap(20)
+					.addComponent(txtGhiChu, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(79))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
+					.addGap(9))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(395)
+					.addComponent(btnDatVe, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cboMaChuyenBay, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblKhchHng, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cboKhachHang, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCmnd, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtCMND, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblinThoi, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtSoDienThoai, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblHngV, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cboHangVe, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblGiTin, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtGiaVe, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblSLng, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(spiSoLuong, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblGhiCh, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtGhiChu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(20)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+					.addGap(15)
+					.addComponent(btnDatVe, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+					.addGap(6))
+		);
+		contentPane.setLayout(gl_contentPane);
 	}
 }
