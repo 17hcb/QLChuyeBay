@@ -38,10 +38,10 @@ public class DatChoEntity implements Serializable{
 	private String ghiChu;
 	
 	@Column(name="TinhTrang")
-	private String tinhTrang;
+	private int tinhTrang;
 
 	public DatChoEntity(int idDatCho, String maChuyenBay, int idKhachHang, int hangVe, int giaVe, int soLuong,
-			String ghiChu, String tinhTrang) {
+			String ghiChu, int tinhTrang) {
 		super();
 		this.idDatCho = idDatCho;
 		this.maChuyenBay = maChuyenBay;
@@ -113,11 +113,11 @@ public class DatChoEntity implements Serializable{
 		this.ghiChu = ghiChu;
 	}
 
-	public String getTinhTrang() {
+	public int getTinhTrang() {
 		return tinhTrang;
 	}
 
-	public void setTinhTrang(String tinhTrang) {
+	public void setTinhTrang(int tinhTrang) {
 		this.tinhTrang = tinhTrang;
 	}
 	

@@ -104,7 +104,7 @@ public class HuyDatCho extends JFrame {
           String qry="select  vdc.IDDatCho as 'ID', vdc.MaChuyenBay as 'Ma Chuyen Bay', kh.TenKhachHang as 'Ten Khach Hang', kh.CMND as 'CMND', kh.SoDienThoai as 'So Dien Thoai', vdc.HangVe as 'Hang Ve', vdc.GiaVe as 'Gia Tien', vdc.SoLuong as 'So Luong', vdc.GhiChu as 'Ghi Chu'\r\n" + 
           		"from tblvedatcho vdc\r\n" + 
           		"left join tblkhachhang kh on vdc.IDKhachHang = kh.IDKhachHang\r\n" + 
-          		"where vdc.MaChuyenBay = '" + cboMaChuyenBay.getSelectedItem().toString() + "'";
+          		"where vdc.TinhTrang = '1' and vdc.MaChuyenBay = '" + cboMaChuyenBay.getSelectedItem().toString() + "'";
           Statement st= conn.createStatement();
           ResultSet rs= st.executeQuery(qry);
           

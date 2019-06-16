@@ -288,7 +288,15 @@ public class BanVe extends JFrame {
 						dc.setHangVe(Integer.parseInt(cboHangVe.getSelectedItem().toString()));
 						dc.setGiaVe(Integer.parseInt(txtGiaVe.getText().toString()));
 						dc.setSoLuong((int)spiSoLuong.getValue());
-						dc.setGhiChu(txtGhiChu.getText().toString());
+						if(txtGhiChu.getText().toString().isEmpty())
+						{
+							dc.setGhiChu("");
+						}
+						else
+						{
+							dc.setGhiChu(txtGhiChu.getText().toString());
+						}
+						dc.setTinhTrang(0);
 						
 						session.beginTransaction();
 						session.save(dc);		
