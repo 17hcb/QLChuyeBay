@@ -8,7 +8,9 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Query;
@@ -52,7 +54,8 @@ public class DanhSachChuyenBay extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtTimKiem;
 	private JTable tbl_ChuyenBay;
-	
+	private int qd_NgayDatVe = 0;
+	private int qd_NgayHuyVe = 0;
    
     
     public void LoadDataChuyenBay() {
@@ -79,6 +82,24 @@ public class DanhSachChuyenBay extends JFrame {
 		}	
     }
     
+    public void LoadDataQuyDinh() {
+    	  // prepare table view
+    	try {
+    		  Connection conn= (Connection) JDBC.getJDBCConnection();
+  		  String qry="select * from tblquydinh";
+  		  Statement st= conn.createStatement();
+  		  ResultSet rs= st.executeQuery(qry);
+  		  while(rs.next()) {
+  			qd_NgayDatVe = Integer.parseInt(rs.getString("ThoiGianChamNhatDatVe"));
+  			qd_NgayHuyVe = Integer.parseInt(rs.getString("ThoiGianChamNhatHuyDatVe"));
+  		  }  
+    	}
+    	catch (Exception e)
+  		{
+  			e.printStackTrace();
+  		}	
+    }
+    
 	/**
 	 * Launch the application.
 	 */
@@ -87,6 +108,7 @@ public class DanhSachChuyenBay extends JFrame {
 			public void run() {
 				try {
 					DanhSachChuyenBay frame = new DanhSachChuyenBay();
+					frame.LoadDataQuyDinh();
 					frame.LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -126,6 +148,38 @@ public class DanhSachChuyenBay extends JFrame {
 			    int SoLuongGhe = Integer.parseInt(dtm.getValueAt(index, 6).toString());
 			    int SoLuongGheDaDat =Integer.parseInt(dtm.getValueAt(index, 7).toString());
 			    int SoGheConTrong = SoLuongGhe - SoLuongGheDaDat;
+			    
+			    // kiem tra ngay
+			    try {
+			    	//lay ngay so sanh
+			    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			    	Date today = new Date();
+				    String Ngaybay =  dtm.getValueAt(index, 3).toString();
+					Date compareday = sdf.parse(Ngaybay);
+					
+					// them ngay vao ngay so sanh
+					Calendar c = Calendar.getInstance();
+					c.setTime(compareday);
+					c.add(Calendar.DATE,-1 * qd_NgayDatVe); // them ngay
+					compareday = c.getTime();
+					
+					// reset gio cua ngay hom nay
+					Calendar c2 = Calendar.getInstance();
+					c2.setTime(today);
+					c2.set(Calendar.HOUR_OF_DAY,0);
+					c2.set(Calendar.MINUTE,0);
+					c2.set(Calendar.SECOND,0);
+					c2.set(Calendar.MILLISECOND,0);
+					today = c2.getTime();
+					
+					 if (compareday.compareTo(today) < 0) {
+					    JOptionPane.showMessageDialog(null, "Đã hết hạn đặt vé");
+						return;
+				     } 
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 			    
 			    if(SoGheConTrong > 0)
 			    {
@@ -191,6 +245,38 @@ public class DanhSachChuyenBay extends JFrame {
 				int index = tbl_ChuyenBay.getSelectedRow();
 			    DefaultTableModel dtm = (DefaultTableModel)tbl_ChuyenBay.getModel(); 
 
+			 // kiem tra ngay
+			    try {
+			    	//lay ngay so sanh
+			    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			    	Date today = new Date();
+				    String Ngaybay =  dtm.getValueAt(index, 3).toString();
+					Date compareday = sdf.parse(Ngaybay);
+					
+					// them ngay vao ngay so sanh
+					Calendar c = Calendar.getInstance();
+					c.setTime(compareday);
+					c.add(Calendar.DATE,-1 * qd_NgayHuyVe); // them ngay
+					compareday = c.getTime();
+					
+					// reset gio cua ngay hom nay
+					Calendar c2 = Calendar.getInstance();
+					c2.setTime(today);
+					c2.set(Calendar.HOUR_OF_DAY,0);
+					c2.set(Calendar.MINUTE,0);
+					c2.set(Calendar.SECOND,0);
+					c2.set(Calendar.MILLISECOND,0);
+					today = c2.getTime();
+					
+					 if (compareday.compareTo(today) < 0) {
+					    JOptionPane.showMessageDialog(null, "Đã hết hạn hủy đặt vé");
+						return;
+				     } 
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			    
 			    //HuyDatCho newframe = new HuyDatCho();
 			    HuyDatCho.main(null, dtm.getValueAt(index, 0).toString());
 			    //newframe.setVisible(true);
@@ -216,9 +302,35 @@ public class DanhSachChuyenBay extends JFrame {
 			    int SoLuongGheDaDat =Integer.parseInt(dtm.getValueAt(index, 7).toString());
 			    int SoGheConTrong = SoLuongGhe - SoLuongGheDaDat;
 			    
+			 // kiem tra ngay
+			    try {
+			    	//lay ngay so sanh
+			    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			    	Date today = new Date();
+				    String Ngaybay =  dtm.getValueAt(index, 3).toString();
+					Date compareday = sdf.parse(Ngaybay);
+					
+					// reset gio cua ngay hom nay
+					Calendar c2 = Calendar.getInstance();
+					c2.setTime(today);
+					c2.set(Calendar.HOUR_OF_DAY,0);
+					c2.set(Calendar.MINUTE,0);
+					c2.set(Calendar.SECOND,0);
+					c2.set(Calendar.MILLISECOND,0);
+					today = c2.getTime();
+					
+					 if (compareday.compareTo(today) < 0) {
+					    JOptionPane.showMessageDialog(null, "Đã hết hạn bán vé");
+						return;
+				     } 
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			    
 			    if(SoGheConTrong > 0)
 			    {
-			    	JOptionPane.showMessageDialog(null, "Mời đặt chỗ - Số ghế còn trống " + SoGheConTrong);
+			    	JOptionPane.showMessageDialog(null, "Mời chọn chỗ - Số ghế còn trống " + SoGheConTrong);
 			    	//BanVe newframe = new BanVe();
 			    	BanVe.main(null, dtm.getValueAt(index, 0).toString());
 			    	//newframe.setVisible(true);
