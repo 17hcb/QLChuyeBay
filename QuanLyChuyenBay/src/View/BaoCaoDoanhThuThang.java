@@ -117,7 +117,7 @@ public class BaoCaoDoanhThuThang extends JFrame {
 		contentPane.add(lblTháng);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(5, 10, 870, 40);
+		panel_1.setBounds(200, 10, 538, 40);
 		contentPane.add(panel_1);
 		
 		JLabel lbltitle = new JLabel("Báo cáo doanh thu bán vé các chuyến bay");

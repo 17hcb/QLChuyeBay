@@ -106,27 +106,27 @@ public class SanBay extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 424, 39);
+		panel.setBounds(77, 33, 295, 50);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Thông tin sân bay");
-		lblNewLabel.setBounds(106, 5, 212, 29);
+		lblNewLabel.setBounds(26, 11, 224, 29);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel.add(lblNewLabel);
 		
 		JLabel lblTnSnBay = new JLabel("Tên điểm đến");
-		lblTnSnBay.setBounds(41, 117, 77, 14);
+		lblTnSnBay.setBounds(41, 178, 77, 14);
 		contentPane.add(lblTnSnBay);
 		
 		txtMaSB = new JTextField();
-		txtMaSB.setBounds(128, 67, 159, 20);
+		txtMaSB.setBounds(128, 128, 159, 20);
 		contentPane.add(txtMaSB);
 		txtMaSB.setColumns(10);
 		
 		txtTenSB = new JTextField();
 		txtTenSB.setColumns(10);
-		txtTenSB.setBounds(128, 114, 159, 20);
+		txtTenSB.setBounds(128, 175, 159, 20);
 		contentPane.add(txtTenSB);
 		
 		JButton btnAdd = new JButton("Thêm mới");
@@ -164,7 +164,7 @@ public class SanBay extends JFrame {
 				}
 			}
 		});
-		btnAdd.setBounds(318, 66, 111, 23);
+		btnAdd.setBounds(318, 127, 111, 23);
 		contentPane.add(btnAdd);
 		
 		JButton btnUpdate = new JButton("Cập nhật");
@@ -210,7 +210,7 @@ public class SanBay extends JFrame {
 				}
 			}
 		});
-		btnUpdate.setBounds(318, 110, 111, 23);
+		btnUpdate.setBounds(318, 171, 111, 23);
 		contentPane.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Xóa");
@@ -249,20 +249,20 @@ public class SanBay extends JFrame {
 				}
 			}
 		});
-		btnDelete.setBounds(318, 155, 111, 23);
+		btnDelete.setBounds(318, 216, 111, 23);
 		contentPane.add(btnDelete);
 		
 		JLabel lblThngTin = new JLabel("Ghi chú");
-		lblThngTin.setBounds(41, 158, 77, 14);
+		lblThngTin.setBounds(41, 219, 77, 14);
 		contentPane.add(lblThngTin);
 		
 		txtThongTin = new JTextField();
 		txtThongTin.setColumns(10);
-		txtThongTin.setBounds(128, 155, 159, 20);
+		txtThongTin.setBounds(128, 216, 159, 20);
 		contentPane.add(txtThongTin);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(452, 5, 434, 39);
+		panel_1.setBounds(454, 44, 434, 39);
 		contentPane.add(panel_1);
 		
 		JLabel lblDanhSchSn = new JLabel("Danh sách sân bay");
@@ -270,7 +270,7 @@ public class SanBay extends JFrame {
 		panel_1.add(lblDanhSchSn);
 		
 		JLabel label = new JLabel("Tìm Kiếm");
-		label.setBounds(452, 70, 85, 20);
+		label.setBounds(454, 109, 85, 20);
 		contentPane.add(label);
 		
 		textsearch = new JTextField();
@@ -284,7 +284,7 @@ public class SanBay extends JFrame {
 			}
 		});
 		textsearch.setColumns(10);
-		textsearch.setBounds(546, 70, 340, 20);
+		textsearch.setBounds(548, 109, 340, 20);
 		contentPane.add(textsearch);
 		
 		JButton button = new JButton("LÀM MỚI");
@@ -294,18 +294,18 @@ public class SanBay extends JFrame {
 				ResetField();
 			}
 		});
-		button.setBounds(318, 201, 111, 23);
+		button.setBounds(318, 262, 111, 23);
 		contentPane.add(button);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(452, 109, 434, 263);
+		scrollPane.setBounds(454, 148, 434, 263);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		
 		JLabel label_1 = new JLabel("Tên sân bay");
-		label_1.setBounds(41, 70, 77, 14);
+		label_1.setBounds(41, 131, 77, 14);
 		contentPane.add(label_1);
 		table.addMouseListener(new MouseAdapter() {
 			@Override

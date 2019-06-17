@@ -218,7 +218,7 @@ public class DanhSachChuyenBay extends JFrame {
 		contentPane.add(lblTmKim);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(5, 10, 870, 40);
+		panel_1.setBounds(252, 10, 413, 40);
 		contentPane.add(panel_1);
 		
 		JLabel lblDanhSchChuyn = new JLabel("DANH SÁCH CHUYẾN BAY");

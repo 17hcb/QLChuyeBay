@@ -389,9 +389,6 @@ public class BanVe extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
-					.addGap(5))
-				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(45)
 					.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
 					.addGap(20)
@@ -437,6 +434,10 @@ public class BanVe extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(395)
 					.addComponent(btnDatVe, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(252)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 303, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(319, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)

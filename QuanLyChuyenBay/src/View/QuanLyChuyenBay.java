@@ -439,7 +439,7 @@ public class QuanLyChuyenBay extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 869, 39);
+		panel.setBounds(254, 5, 408, 39);
 		contentPane.add(panel);
 		
 		JLabel lblQunLTuyn = new JLabel("THÔNG TIN CHUYẾN BAY");

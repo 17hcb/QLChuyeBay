@@ -214,7 +214,7 @@ public class Gia extends JFrame implements Serializable {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 425, 35);
+		panel.setBounds(150, 5, 190, 35);
 		contentPane.add(panel);
 		
 		JLabel lblThngTinGi = new JLabel("Thông tin giá vé");
@@ -338,7 +338,7 @@ public class Gia extends JFrame implements Serializable {
 		contentPane.add(textField);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(439, 5, 434, 39);
+		panel_1.setBounds(555, 5, 226, 39);
 		contentPane.add(panel_1);
 		
 		JLabel lblDanhSchSn = new JLabel("Danh sách giá vé");

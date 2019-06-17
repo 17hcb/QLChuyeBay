@@ -230,7 +230,7 @@ public class DatCho extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 869, 35);
+		panel.setBounds(255, 5, 355, 35);
 		contentPane.add(panel);
 		
 		JLabel lblThngTint = new JLabel("Thông tin đặt chỗ");

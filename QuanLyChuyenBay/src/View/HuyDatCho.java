@@ -146,7 +146,7 @@ public class HuyDatCho extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 869, 35);
+		panel.setBounds(273, 5, 268, 35);
 		contentPane.add(panel);
 		
 		JLabel lblThngTint = new JLabel("Thông tin đặt chỗ");

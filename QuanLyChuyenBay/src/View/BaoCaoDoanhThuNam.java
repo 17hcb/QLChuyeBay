@@ -121,7 +121,7 @@ public class BaoCaoDoanhThuNam extends JFrame {
 		contentPane.add(lblNam);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(5, 10, 870, 40);
+		panel_1.setBounds(270, 10, 300, 40);
 		contentPane.add(panel_1);
 		
 		JLabel lbltitle = new JLabel("Báo cáo doanh thu năm");

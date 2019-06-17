@@ -106,7 +106,7 @@ public class KhachHang extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(25, 10, 412, 35);
+		panel.setBounds(96, 58, 291, 35);
 		contentPane.add(panel);
 		
 		JLabel lblKhchHng = new JLabel("THÔNG TIN KHÁCH HÀNG");
@@ -114,30 +114,30 @@ public class KhachHang extends JFrame {
 		panel.add(lblKhchHng);
 		
 		JLabel lblCmnd = new JLabel("CMND");
-		lblCmnd.setBounds(25, 88, 107, 14);
+		lblCmnd.setBounds(24, 136, 107, 14);
 		contentPane.add(lblCmnd);
 		
 		JLabel lblTnKhchHng = new JLabel("TÊN KHÁCH HÀNG");
-		lblTnKhchHng.setBounds(25, 140, 124, 14);
+		lblTnKhchHng.setBounds(24, 188, 124, 14);
 		contentPane.add(lblTnKhchHng);
 		
 		JLabel lblinThoi = new JLabel("SỐ ĐIỆN THOẠI");
-		lblinThoi.setBounds(25, 193, 124, 14);
+		lblinThoi.setBounds(24, 241, 124, 14);
 		contentPane.add(lblinThoi);
 		
 		txtCMND = new JTextField();
-		txtCMND.setBounds(155, 85, 146, 20);
+		txtCMND.setBounds(154, 133, 146, 20);
 		contentPane.add(txtCMND);
 		txtCMND.setColumns(10);
 		
 		txtTenKH = new JTextField();
 		txtTenKH.setColumns(10);
-		txtTenKH.setBounds(155, 137, 146, 20);
+		txtTenKH.setBounds(154, 185, 146, 20);
 		contentPane.add(txtTenKH);
 		
 		txtDT = new JTextField();
 		txtDT.setColumns(10);
-		txtDT.setBounds(155, 190, 146, 20);
+		txtDT.setBounds(154, 238, 146, 20);
 		contentPane.add(txtDT);
 		
 		JButton btnAdd = new JButton("THÊM");
@@ -178,7 +178,7 @@ public class KhachHang extends JFrame {
 				}
 			}
 		});
-		btnAdd.setBounds(337, 84, 100, 23);
+		btnAdd.setBounds(336, 132, 100, 23);
 		contentPane.add(btnAdd);
 		
 		JButton btnUpdate = new JButton("CẬP NHẬT");
@@ -225,7 +225,7 @@ public class KhachHang extends JFrame {
 				}
 			}
 		});
-		btnUpdate.setBounds(337, 189, 100, 23);
+		btnUpdate.setBounds(336, 237, 100, 23);
 		contentPane.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("XÓA");
@@ -268,11 +268,11 @@ public class KhachHang extends JFrame {
 				}
 			}
 		});
-		btnDelete.setBounds(337, 136, 100, 23);
+		btnDelete.setBounds(336, 184, 100, 23);
 		contentPane.add(btnDelete);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(458, 85, 436, 243);
+		scrollPane.setBounds(446, 133, 436, 243);
 		contentPane.add(scrollPane);
 		
 		tblKhachHang = new JTable();
@@ -301,7 +301,7 @@ public class KhachHang extends JFrame {
 				ResetField();
 			}
 		});
-		btnLam.setBounds(337, 236, 100, 23);
+		btnLam.setBounds(336, 284, 100, 23);
 		contentPane.add(btnLam);
 		
 		txtSearch = new JTextField();
@@ -315,15 +315,15 @@ public class KhachHang extends JFrame {
 			}
 		});
 		txtSearch.setColumns(10);
-		txtSearch.setBounds(554, 54, 340, 20);
+		txtSearch.setBounds(542, 102, 340, 20);
 		contentPane.add(txtSearch);
 		
 		JLabel lblTimKiem = new JLabel("Tìm Kiếm");
-		lblTimKiem.setBounds(460, 54, 85, 20);
+		lblTimKiem.setBounds(448, 102, 85, 20);
 		contentPane.add(lblTimKiem);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(458, 10, 436, 35);
+		panel_1.setBounds(536, 58, 291, 35);
 		contentPane.add(panel_1);
 		
 		JLabel lblDanhSchKhch = new JLabel("DANH SÁCH KHÁCH HÀNG");

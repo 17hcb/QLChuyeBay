@@ -130,7 +130,7 @@ public class QuyDinh extends JFrame {
 		contentPane.setLayout(null);
 		
 		Panel panel = new Panel();
-		panel.setBounds(5, 5, 469, 35);
+		panel.setBounds(138, 5, 201, 35);
 		contentPane.add(panel);
 		
 		JLabel lblQunLQuy = new JLabel("Quản lý quy định");
