@@ -1,12 +1,17 @@
 package View;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +19,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
+import javax.swing.plaf.metal.MetalTabbedPaneUI;
 
 import net.bytebuddy.implementation.bytecode.Addition;
 
@@ -29,6 +35,10 @@ public class Main {
 	private JMenu menuQuanLy;
 	private JMenu menuChucNang;
 	private JMenu menuBaoCao;
+	
+	JTabbedPane tabbedPane;
+	int ntabs = 0;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -75,7 +85,8 @@ public class Main {
 		JMenuBar menuBar = new JMenuBar();
 		frmMnHnhChnh.setJMenuBar(menuBar);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setUI(new CustomTabbedPaneUI());
 		
 		GroupLayout groupLayout = new GroupLayout(frmMnHnhChnh.getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -259,4 +270,42 @@ public class Main {
 		menuBaoCao.add(itemDTBVNam);
 	}
 
+}
+
+class CustomTabbedPaneUI extends MetalTabbedPaneUI
+{
+   Rectangle xRect;
+  
+   protected void installListeners() {
+      super.installListeners();
+      tabPane.addMouseListener(new MyMouseHandler());
+   }
+  
+   protected void paintTab(Graphics g, int tabPlacement,
+                           Rectangle[] rects, int tabIndex,
+                           Rectangle iconRect, Rectangle textRect) {
+      super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
+  
+      Font f = g.getFont();
+      g.setFont(new Font("Courier", Font.BOLD, 10));
+      g.setColor(Color.RED);
+      FontMetrics fm = g.getFontMetrics(g.getFont());
+      int charWidth = fm.charWidth('x');
+      int maxAscent = fm.getMaxAscent();
+      g.drawString("x", textRect.x + textRect.width - 5, textRect.y + textRect.height - 5);
+      g.drawRect(textRect.x + textRect.width - 5, textRect.y + textRect.height - maxAscent, charWidth + 2, maxAscent - 1);
+      xRect = new Rectangle(textRect.x + textRect.width-5, textRect.y + textRect.height - maxAscent, charWidth+2, maxAscent-1);
+      g.setFont(f);
+    }
+  
+    public class MyMouseHandler extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            System.out.println(e);
+            if (xRect.contains(e.getPoint())) {
+               JTabbedPane tabPane = (JTabbedPane)e.getSource();
+               int tabIndex = tabForCoordinate(tabPane, e.getX(), e.getY());
+               tabPane.remove(tabIndex);
+            }
+        }
+    }
 }
