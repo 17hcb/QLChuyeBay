@@ -552,7 +552,7 @@ public class QuanLyChuyenBay extends JFrame {
 				}
 			}
 		});
-		btnAdd.setBounds(190, 426, 105, 40);
+		btnAdd.setBounds(190, 650, 105, 40);
 		contentPane.add(btnAdd);
 		
 		//Xu ly cap nhat chuyen bay
@@ -654,7 +654,7 @@ public class QuanLyChuyenBay extends JFrame {
 				}
 			}
 		});
-		btnUpdate.setBounds(490, 426, 105, 40);
+		btnUpdate.setBounds(490, 650, 105, 40);
 		contentPane.add(btnUpdate);
 		
 	
@@ -706,7 +706,7 @@ public class QuanLyChuyenBay extends JFrame {
 			
 			}
 		});
-		btnDelete.setBounds(340, 426, 105, 40);
+		btnDelete.setBounds(340, 650, 105, 40);
 		contentPane.add(btnDelete);
 		
 		
@@ -808,7 +808,7 @@ public class QuanLyChuyenBay extends JFrame {
 		contentPane.add(cbb_SanBayTrungGian);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(5, 556, 870, 144);
+		scrollPane_1.setBounds(5, 500, 870, 130);
 		contentPane.add(scrollPane_1);
 		
 		// Xu ly load du lieu theo dong chon
@@ -849,11 +849,11 @@ public class QuanLyChuyenBay extends JFrame {
 		
 		textField_4 = new JTextField();
 		textField_4.setColumns(10);
-		textField_4.setBounds(190, 526, 635, 20);
+		textField_4.setBounds(190, 470, 635, 20);
 		contentPane.add(textField_4);
 		
 		JLabel lblTmKim = new JLabel("Tìm kiếm");
-		lblTmKim.setBounds(120, 526, 60, 20);
+		lblTmKim.setBounds(120, 470, 60, 20);
 		contentPane.add(lblTmKim);
 		
 		//Xu ly reset 
@@ -864,7 +864,7 @@ public class QuanLyChuyenBay extends JFrame {
 				ResetField();
 			}
 		});
-		btnThitLpLi.setBounds(640, 426, 105, 40);
+		btnThitLpLi.setBounds(640, 650, 105, 40);
 		contentPane.add(btnThitLpLi);
 		
 	    cbb_SanBayDi = new JComboBox();
@@ -1012,7 +1012,7 @@ public class QuanLyChuyenBay extends JFrame {
 		contentPane.add(spi_SoLuongGhe2);
 		
 		Panel panel_1 = new Panel();
-		panel_1.setBounds(5, 477, 869, 39);
+		panel_1.setBounds(5, 421, 869, 39);
 		contentPane.add(panel_1);
 		
 		JLabel lblDanhSchChuyn = new JLabel("DANH SÁCH CHUYẾN BAY");
