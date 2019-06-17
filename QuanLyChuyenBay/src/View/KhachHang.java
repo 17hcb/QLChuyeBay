@@ -79,12 +79,11 @@ public class KhachHang extends JFrame {
 		}	
 	}
 	
-	public static void main(String[] args) {
+	public void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					KhachHang frame = new KhachHang();
-					LoadData();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -329,5 +328,8 @@ public class KhachHang extends JFrame {
 		JLabel lblDanhSchKhch = new JLabel("DANH SÁCH KHÁCH HÀNG");
 		lblDanhSchKhch.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel_1.add(lblDanhSchKhch);
+		
+		// cac ham xu ly
+		LoadData();
 	}
 }

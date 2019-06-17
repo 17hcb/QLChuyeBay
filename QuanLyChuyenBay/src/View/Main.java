@@ -25,7 +25,10 @@ import javax.swing.GroupLayout.Alignment;
 public class Main {
 
 	private JFrame frmMnHnhChnh;
-
+	private JMenu menuHeThong;
+	private JMenu menuQuanLy;
+	private JMenu menuChucNang;
+	private JMenu menuBaoCao;
 	/**
 	 * Launch the application.
 	 */
@@ -33,7 +36,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main window = new Main();
+					Main window = new Main(0);
 					
 					window.frmMnHnhChnh.setVisible(true);
 					
@@ -48,8 +51,13 @@ public class Main {
 	/**
 	 * Create the application.
 	 */
-	public Main() {
+	public Main(int type) {
 		initialize();
+		if(type == 2)
+		{
+			menuQuanLy.setVisible(false);
+			menuBaoCao.setVisible(false);
+		}
 	}
 
 	/**
@@ -84,30 +92,9 @@ public class Main {
 		frmMnHnhChnh.getContentPane().setLayout(groupLayout);
 		frmMnHnhChnh.setVisible(true);
 		
-		JMenu menuHeThong = new JMenu("Hệ thống");
+	    menuHeThong = new JMenu("Hệ thống");
 		menuHeThong.setIcon(new ImageIcon(Main.class.getResource("/com/sun/java/swing/plaf/windows/icons/HardDrive.gif")));
 		menuBar.add(menuHeThong);
-		
-		JMenuItem itemQLNV = new JMenuItem("Quản lý nhân viên");
-		itemQLNV.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NhanVien nv = new NhanVien();
-				tabbedPane.addTab("Nhân viên", nv.getContentPane());
-				tabbedPane.setLocation(100, 200);
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
-			}
-		});
-		menuHeThong.add(itemQLNV);
-		
-		JMenuItem itemDoiMK = new JMenuItem("Đổi mật khẩu");
-		itemDoiMK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		menuHeThong.add(itemDoiMK);
 		
 		JMenuItem itemQuyDinh = new JMenuItem("Quy định");
 		itemQuyDinh.addActionListener(new ActionListener() {
@@ -133,11 +120,11 @@ public class Main {
 		});
 		menuHeThong.add(itemExit);
 		
-		JMenu menuQuanLy = new JMenu("Quản Lý");
+		menuQuanLy = new JMenu("Quản Lý");
 		menuQuanLy.setIcon(new ImageIcon(Main.class.getResource("/com/sun/javafx/scene/web/skin/Paste_16x16_JFX.png")));
 		menuBar.add(menuQuanLy);
 		
-		JMenuItem itemQLSanBay = new JMenuItem("Quản lý sân bay");
+		JMenuItem itemQLSanBay = new JMenuItem("Sân bay");
 		itemQLSanBay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SanBay dn = new SanBay();
@@ -149,6 +136,20 @@ public class Main {
 			}
 		});
 		menuQuanLy.add(itemQLSanBay);
+		
+		
+		JMenuItem itemQuanLyChuyenBay = new JMenuItem("Chuyến bay");
+		itemQuanLyChuyenBay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				QuanLyChuyenBay qlcb = new QuanLyChuyenBay();
+				tabbedPane.addTab("Quản lý chuyến bay", qlcb.getContentPane());
+				if (tabbedPane.getComponentCount() > 1)
+				{
+					tabbedPane.remove(0);
+				}
+			}
+		});
+		menuQuanLy.add(itemQuanLyChuyenBay);
 		
 //		JMenuItem itemQLTuyenBay = new JMenuItem("Quản lý tuyến bay");
 //		itemQLTuyenBay.addActionListener(new ActionListener() {
@@ -184,7 +185,7 @@ public class Main {
 //		});
 //		menuQuanLy.add(itemQLHangVe);
 		
-		JMenuItem itemQLGiaVe = new JMenuItem("Quản lý giá vé");
+		JMenuItem itemQLGiaVe = new JMenuItem("Cập nhật giá vé");
 		itemQLGiaVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Gia g = new Gia();
@@ -197,62 +198,37 @@ public class Main {
 		});
 		menuQuanLy.add(itemQLGiaVe);
 		
-		JMenuItem itemQLKhachHang = new JMenuItem("Quản lý khách hàng");
-		itemQLKhachHang.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				KhachHang kh = new KhachHang();
-				tabbedPane.addTab("Khách hàng", kh.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
-			}
-		});
-		menuQuanLy.add(itemQLKhachHang);
+		menuChucNang = new JMenu("Chức năng");
+		menuChucNang.setIcon(new ImageIcon(Main.class.getResource("/javax/swing/plaf/metal/icons/ocean/file.gif")));
+		menuBar.add(menuChucNang);
 		
-		JMenuItem itemQLDatCho = new JMenuItem("Quản lý đặt chỗ");
-		itemQLDatCho.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DatCho dc = new DatCho();
-				tabbedPane.addTab("Đặt chỗ", dc.getContentPane());
-				if (tabbedPane.getComponentCount() > 1)
-				{
-					tabbedPane.remove(0);
-				}
-			}
-		});
-		menuQuanLy.add(itemQLDatCho);
-		
-//		JMenuItem itemVeChuyenBay = new JMenuItem("Vé chuyến bay");
-//		menuQuanLy.add(itemVeChuyenBay);
 		JMenuItem itemDanhSachChuyenBay = new JMenuItem("Danh sách chuyến bay");
 		itemDanhSachChuyenBay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DanhSachChuyenBay dscb = new DanhSachChuyenBay();
-				tabbedPane.addTab("Danh sách chuyến bay", dscb.getContentPane());
+			public void actionPerformed(ActionEvent arg0) {
+				DanhSachChuyenBay ds = new DanhSachChuyenBay();
+				tabbedPane.addTab("Danh Sách Chuyến Bay", ds.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
 				}
 			}
 		});
-		menuQuanLy.add(itemDanhSachChuyenBay);
+		menuChucNang.add(itemDanhSachChuyenBay);
 		
-		
-		JMenuItem itemQuanLyChuyenBay = new JMenuItem("Quản lý chuyến bay");
-		itemQuanLyChuyenBay.addActionListener(new ActionListener() {
+		JMenuItem itemKhachHang = new JMenuItem("Khách Hàng");
+		itemKhachHang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				QuanLyChuyenBay qlcb = new QuanLyChuyenBay();
-				tabbedPane.addTab("Quản lý chuyến bay", qlcb.getContentPane());
+				KhachHang kh = new KhachHang();
+				tabbedPane.addTab("Danh Sách Chuyến Bay", kh.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
 				}
 			}
 		});
-		menuQuanLy.add(itemQuanLyChuyenBay);
+		menuChucNang.add(itemKhachHang);
 		
-		JMenu menuBaoCao = new JMenu("Báo cáo");
+		menuBaoCao = new JMenu("Báo cáo");
 		menuBaoCao.setIcon(new ImageIcon(Main.class.getResource("/javax/swing/plaf/metal/icons/ocean/file.gif")));
 		menuBar.add(menuBaoCao);
 		

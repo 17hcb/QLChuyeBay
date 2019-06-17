@@ -103,13 +103,11 @@ public class DanhSachChuyenBay extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					DanhSachChuyenBay frame = new DanhSachChuyenBay();
-					frame.LoadDataQuyDinh();
-					frame.LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -345,5 +343,9 @@ public class DanhSachChuyenBay extends JFrame {
 		});
 		btnBnV.setBounds(230, 390, 120, 60);
 		contentPane.add(btnBnV);
+		
+		// cac ham xu ly
+		LoadDataQuyDinh();
+		LoadDataChuyenBay();
 	}
 }

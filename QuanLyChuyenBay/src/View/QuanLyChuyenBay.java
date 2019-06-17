@@ -416,7 +416,6 @@ public class QuanLyChuyenBay extends JFrame {
 			public void run() {
 				try {
 					QuanLyChuyenBay frame = new QuanLyChuyenBay();
-					frame.LoadData();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1018,5 +1017,8 @@ public class QuanLyChuyenBay extends JFrame {
 		JLabel lblDanhSchChuyn = new JLabel("DANH SÁCH CHUYẾN BAY");
 		lblDanhSchChuyn.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel_1.add(lblDanhSchChuyn);
+		
+		//cac ham xu ly
+		LoadData();
 	}
 }

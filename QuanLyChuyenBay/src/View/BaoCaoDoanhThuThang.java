@@ -90,7 +90,6 @@ public class BaoCaoDoanhThuThang extends JFrame {
 			public void run() {
 				try {
 					BaoCaoDoanhThuThang frame = new BaoCaoDoanhThuThang();
-					frame.LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -184,5 +183,8 @@ public class BaoCaoDoanhThuThang extends JFrame {
 
 		cbb_Thang.setBounds(270, 70, 300, 20);
 		contentPane.add(cbb_Thang);
+		
+		// cac ham xu ly
+		LoadDataChuyenBay();
 	}
 }

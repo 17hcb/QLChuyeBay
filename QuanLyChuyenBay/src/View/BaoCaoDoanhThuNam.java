@@ -94,7 +94,6 @@ public class BaoCaoDoanhThuNam extends JFrame {
 			public void run() {
 				try {
 					BaoCaoDoanhThuNam frame = new BaoCaoDoanhThuNam();
-					frame.LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -191,5 +190,8 @@ public class BaoCaoDoanhThuNam extends JFrame {
 		txtNam.setBounds(270, 70, 300, 20);
 		contentPane.add(txtNam);
 		txtNam.setColumns(10);
+		
+		//cac ham xu ly
+		LoadDataChuyenBay();
 	}
 }

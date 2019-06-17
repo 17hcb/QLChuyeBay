@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import JDBC.JDBC;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -17,6 +20,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class DangNhap extends JFrame {
 
@@ -76,11 +82,36 @@ public class DangNhap extends JFrame {
 		JButton btnDN = new JButton("Đăng nhập");
 		btnDN.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(true) {
-					Main frmMain = new Main();
-					setVisible(false);
-				} else {
-					JOptionPane.showMessageDialog(rootPane, "Đăng nhập không thành công");
+				if (txtTenDN.getText().isEmpty() || txtPW.getPassword().length == 0)
+				{
+					JOptionPane.showMessageDialog(null, "Tên đăng nhập hoặc mật khẩu trống !");
+					return;
+				} 
+				else {
+					String myuser = txtTenDN.getText().toString();
+					String mypass = new String(txtPW.getPassword());
+					try {
+						  Connection conn= (Connection) JDBC.getJDBCConnection();
+						  String qry="select * from tbltaikhoan";
+						  Statement st= conn.createStatement();
+						  ResultSet rs= st.executeQuery(qry);
+						  while(rs.next()) {
+							if(myuser.equals(rs.getString("username")) && mypass.equals(rs.getString("password")))
+							{
+								Main frmMain = new Main(rs.getInt("type"));
+								setVisible(false);
+								dispose();
+								return;
+							}
+						  }  
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}	
+					
+					JOptionPane.showMessageDialog(null, "Tên đăng nhập hoặc mật khẩu không chính xác !");
+					return;
 				}
 			}
 		});

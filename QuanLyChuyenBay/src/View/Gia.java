@@ -69,8 +69,6 @@ public class Gia extends JFrame implements Serializable {
 			public void run() {
 				try {
 					Gia frame = new Gia();
-					LoadDataHangVe();
-					LoadDataChuyenBay();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -366,5 +364,9 @@ public class Gia extends JFrame implements Serializable {
 		JLabel lblMChuynBay = new JLabel("Mã chuyến bay");
 		lblMChuynBay.setBounds(30, 65, 90, 15);
 		contentPane.add(lblMChuynBay);
+		
+		//cac ham xu ly
+		LoadDataHangVe();
+		LoadDataChuyenBay();
 	}
 }

@@ -57,7 +57,6 @@ public class SanBay extends JFrame {
 			public void run() {
 				try {
 					SanBay frame = new SanBay();
-					LoadData();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -323,6 +322,7 @@ public class SanBay extends JFrame {
 			}
 		});
 		
-		
+		// cac ham xu ly
+		LoadData();
 	}
 }
