@@ -111,7 +111,7 @@ public class Main {
 		itemQuyDinh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				QuyDinh qd = new QuyDinh();
-				tabbedPane.addTab("Quy định", qd.getContentPane());
+				tabbedPane.addTab("Quy định    ", qd.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -139,7 +139,7 @@ public class Main {
 		itemQLSanBay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SanBay dn = new SanBay();
-				tabbedPane.addTab("Sân bay", dn.getContentPane());
+				tabbedPane.addTab("Sân bay    ", dn.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -153,7 +153,7 @@ public class Main {
 		itemQuanLyChuyenBay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				QuanLyChuyenBay qlcb = new QuanLyChuyenBay();
-				tabbedPane.addTab("Quản lý chuyến bay", qlcb.getContentPane());
+				tabbedPane.addTab("Quản lý chuyến bay    ", qlcb.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -200,7 +200,7 @@ public class Main {
 		itemQLGiaVe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Gia g = new Gia();
-				tabbedPane.addTab("Giá Vé", g.getContentPane());
+				tabbedPane.addTab("Giá Vé    ", g.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -217,7 +217,7 @@ public class Main {
 		itemDanhSachChuyenBay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				DanhSachChuyenBay ds = new DanhSachChuyenBay();
-				tabbedPane.addTab("Danh Sách Chuyến Bay", ds.getContentPane());
+				tabbedPane.addTab("Danh Sách Chuyến Bay    ", ds.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -230,7 +230,7 @@ public class Main {
 		itemKhachHang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				KhachHang kh = new KhachHang();
-				tabbedPane.addTab("Danh Sách Chuyến Bay", kh.getContentPane());
+				tabbedPane.addTab("Khách hàng    ", kh.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -247,7 +247,7 @@ public class Main {
 		itemDTBVThang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				BaoCaoDoanhThuThang dtt = new BaoCaoDoanhThuThang();
-				tabbedPane.addTab("Doanh Thu Tháng", dtt.getContentPane());
+				tabbedPane.addTab("Doanh Thu Tháng    ", dtt.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -260,7 +260,7 @@ public class Main {
 		itemDTBVNam.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				BaoCaoDoanhThuNam bcn = new BaoCaoDoanhThuNam();
-				tabbedPane.addTab("Doanh Thu Năm", bcn.getContentPane());
+				tabbedPane.addTab("Doanh Thu Năm    ", bcn.getContentPane());
 				if (tabbedPane.getComponentCount() > 1)
 				{
 					tabbedPane.remove(0);
@@ -292,7 +292,7 @@ class CustomTabbedPaneUI extends MetalTabbedPaneUI
       FontMetrics fm = g.getFontMetrics(g.getFont());
       int charWidth = fm.charWidth('x');
       int maxAscent = fm.getMaxAscent();
-      g.drawString("x", textRect.x + textRect.width - 5, textRect.y + textRect.height - 5);
+      g.drawString("x", textRect.x + textRect.width - 3, textRect.y + textRect.height - 3);
       g.drawRect(textRect.x + textRect.width - 5, textRect.y + textRect.height - maxAscent, charWidth + 2, maxAscent - 1);
       xRect = new Rectangle(textRect.x + textRect.width-5, textRect.y + textRect.height - maxAscent, charWidth+2, maxAscent-1);
       g.setFont(f);
