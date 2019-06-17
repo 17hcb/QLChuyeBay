@@ -23,6 +23,7 @@
 <mapping class="Entity.GiaVeEntity" />
 <mapping class="Entity.QuyDinhEntity" />
 <mapping class="Entity.HangVeBoSungEntity" />
+<mapping class="Entity.TaiKhoanEntity" />
 
 </session-factory>
 </hibernate-configuration>
